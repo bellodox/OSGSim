@@ -13,3 +13,4 @@ reports/native-*/
 .osg/logs/
 .osg/export/
 reports/
+tests/_*

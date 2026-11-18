@@ -1,0 +1,22 @@
+{
+  "name": "osg-sim-integration",
+  "version": "0.2.1-dev",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node apps/world-service/server.mjs",
+    "start:replay": "node apps/world-service/server.mjs --replay fixtures/recordings/Atlantis",
+    "test": "node --test tests/*.test.mjs",
+    "test:integration": "node --test tests/integration.test.mjs",
+    "test:native": "node scripts/native-preflight.mjs",
+    "test:e2e": "node scripts/browser-preflight.mjs",
+    "verify": "npm run test && npm run test:integration && npm run test:native && npm run test:e2e",
+    "test:wire": "node scripts/test-wire.mjs",
+    "test:osg": "node scripts/osg-smoke.mjs",
+    "verify:portable": "npm test && npm run test:wire"
+  }
+}

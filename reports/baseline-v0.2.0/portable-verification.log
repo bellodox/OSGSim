@@ -1,0 +1,233 @@
+
+> osg-sim-integration@0.2.0-dev verify:portable
+> npm test && npm run test:wire
+
+
+> osg-sim-integration@0.2.0-dev test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: bridge configured with token rejects unauthenticated and invalid producers before accepting any telemetry
+ok 1 - bridge configured with token rejects unauthenticated and invalid producers before accepting any telemetry
+  ---
+  duration_ms: 372.666595
+  type: 'test'
+  ...
+# Subtest: cross-site WebSocket Origin is rejected; same-site browser Origin is accepted
+ok 2 - cross-site WebSocket Origin is rejected; same-site browser Origin is accepted
+  ---
+  duration_ms: 12.267352
+  type: 'test'
+  ...
+# Subtest: concurrent journal writers are serialized and every entry is valid after restart
+ok 3 - concurrent journal writers are serialized and every entry is valid after restart
+  ---
+  duration_ms: 66.222239
+  type: 'test'
+  ...
+# Subtest: assets cannot be overwritten by corrupt content with a forged content-hash filename
+ok 4 - assets cannot be overwritten by corrupt content with a forged content-hash filename
+  ---
+  duration_ms: 9.122157
+  type: 'test'
+  ...
+# Subtest: contact contains recoverable physical asset and three observers have distinct causal arrival times
+ok 5 - contact contains recoverable physical asset and three observers have distinct causal arrival times
+  ---
+  duration_ms: 97.995463
+  type: 'test'
+  ...
+# Subtest: recorder importer creates real immutable source hashes/checkpoints and rejects ambiguous reimport
+ok 6 - recorder importer creates real immutable source hashes/checkpoints and rejects ambiguous reimport
+  ---
+  duration_ms: 400.758323
+  type: 'test'
+  ...
+# Subtest: native poststep transition yields exactly one durable CONTACT_BEGIN, rejects duplicate source sequence
+ok 7 - native poststep transition yields exactly one durable CONTACT_BEGIN, rejects duplicate source sequence
+  ---
+  duration_ms: 95.107656
+  type: 'test'
+  ...
+# Subtest: HTTP recording has exact source, gap policy and no false native attribution
+ok 8 - HTTP recording has exact source, gap policy and no false native attribution
+  ---
+  duration_ms: 38.745205
+  type: 'test'
+  ...
+# Subtest: journal is hash chained, durable, idempotent and restart stable
+ok 9 - journal is hash chained, durable, idempotent and restart stable
+  ---
+  duration_ms: 34.661062
+  type: 'test'
+  ...
+# Subtest: asset store validates content hashes, stores precise IEEE-754 values
+ok 10 - asset store validates content hashes, stores precise IEEE-754 values
+  ---
+  duration_ms: 11.214302
+  type: 'test'
+  ...
+# Subtest: Hermite interpolates position endpoints and derivatives for straight motion
+ok 11 - Hermite interpolates position endpoints and derivatives for straight motion
+  ---
+  duration_ms: 2.426719
+  type: 'test'
+  ...
+# Subtest: slerp handles sign-equivalent quaternions and normalizes
+ok 12 - slerp handles sign-equivalent quaternions and normalizes
+  ---
+  duration_ms: 0.63552
+  type: 'test'
+  ...
+# Subtest: rotation conversion reconstructs normalized quaternion
+ok 13 - rotation conversion reconstructs normalized quaternion
+  ---
+  duration_ms: 0.536773
+  type: 'test'
+  ...
+# Subtest: 4D gaussian uses correct conditional mean/covariance and strict onset
+ok 14 - 4D gaussian uses correct conditional mean/covariance and strict onset
+  ---
+  duration_ms: 0.981066
+  type: 'test'
+  ...
+# Subtest: rejects non-SPD covariance and reflected reference frames
+ok 15 - rejects non-SPD covariance and reflected reference frames
+  ---
+  duration_ms: 0.466051
+  type: 'test'
+  ...
+# Subtest: double precision subtraction before Float32 projection
+ok 16 - double precision subtraction before Float32 projection
+  ---
+  duration_ms: 0.60885
+  type: 'test'
+  ...
+# Subtest: native-journal verification distinguishes locally authenticated sample from simulator provenance
+ok 17 - native-journal verification distinguishes locally authenticated sample from simulator provenance
+  ---
+  duration_ms: 123.679661
+  type: 'test'
+  ...
+# Subtest: real local network: 3 WebSocket observers receive native transport samples and contact; late joiner resyncs all entities
+ok 18 - real local network: 3 WebSocket observers receive native transport samples and contact; late joiner resyncs all entities
+  ---
+  duration_ms: 178.122094
+  type: 'test'
+  ...
+# Subtest: journal events survive restart without being misrepresented as current live telemetry
+ok 19 - journal events survive restart without being misrepresented as current live telemetry
+  ---
+  duration_ms: 143.178181
+  type: 'test'
+  ...
+# Subtest: new run isolates live vessel cache and event replay from previous run while preserving journal history
+ok 20 - new run isolates live vessel cache and event replay from previous run while preserving journal history
+  ---
+  duration_ms: 145.74872
+  type: 'test'
+  ...
+# Subtest: light travel delay for fixed reference observer equals Euclidean distance/c
+ok 21 - light travel delay for fixed reference observer equals Euclidean distance/c
+  ---
+  duration_ms: 1.305295
+  type: 'test'
+  ...
+# Subtest: moving observer receiving signal has self-consistent future position
+ok 22 - moving observer receiving signal has self-consistent future position
+  ---
+  duration_ms: 0.28935
+  type: 'test'
+  ...
+# Subtest: no sensor sees information before its arrival time; missing locations remain unknown
+ok 23 - no sensor sees information before its arrival time; missing locations remain unknown
+  ---
+  duration_ms: 0.798033
+  type: 'test'
+  ...
+# Subtest: invalid trajectories and propagation speeds fail closed
+ok 24 - invalid trajectories and propagation speeds fail closed
+  ---
+  duration_ms: 0.695486
+  type: 'test'
+  ...
+# Subtest: OSG adapter recovery is idempotent against an API-shape test double (NOT real LanceDB proof)
+ok 25 - OSG adapter recovery is idempotent against an API-shape test double (NOT real LanceDB proof)
+  ---
+  duration_ms: 125.739827
+  type: 'test'
+  ...
+# Subtest: valid physical sample
+ok 26 - valid physical sample
+  ---
+  duration_ms: 1.672735
+  type: 'test'
+  ...
+# Subtest: rejects invalid/oversize/NaN input
+ok 27 - rejects invalid/oversize/NaN input
+  ---
+  duration_ms: 1.443738
+  type: 'test'
+  ...
+# Subtest: sequence gate rejects missing/out-of-order events
+ok 28 - sequence gate rejects missing/out-of-order events
+  ---
+  duration_ms: 0.522185
+  type: 'test'
+  ...
+# Subtest: event identity is stable by causal tuple
+ok 29 - event identity is stable by causal tuple
+  ---
+  duration_ms: 0.612834
+  type: 'test'
+  ...
+# Subtest: commands are deliberately bounded
+ok 30 - commands are deliberately bounded
+  ---
+  duration_ms: 2.04799
+  type: 'test'
+  ...
+# Subtest: real Metaverse recorder excerpt parsed with truthful metadata and no gap interpolation
+ok 31 - real Metaverse recorder excerpt parsed with truthful metadata and no gap interpolation
+  ---
+  duration_ms: 7.163685
+  type: 'test'
+  ...
+# Subtest: polar radial conversion and tangent velocity
+ok 32 - polar radial conversion and tangent velocity
+  ---
+  duration_ms: 0.731329
+  type: 'test'
+  ...
+# Subtest: attitude stays in recorded horizon frame rather than unverified world quaternion
+ok 33 - attitude stays in recorded horizon frame rather than unverified world quaternion
+  ---
+  duration_ms: 3.296009
+  type: 'test'
+  ...
+# Subtest: recorded LANDED is source evidence but not a native contact event
+ok 34 - recorded LANDED is source evidence but not a native contact event
+  ---
+  duration_ms: 1.736456
+  type: 'test'
+  ...
+# Subtest: rejects unsupported and changing reference frames
+ok 35 - rejects unsupported and changing reference frames
+  ---
+  duration_ms: 0.561573
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1312.968031
+
+> osg-sim-integration@0.2.0-dev test:wire
+> node scripts/test-wire.mjs
+
+PASS: C++17 native serializer compile, ctest and JavaScript wire protocol roundtrip

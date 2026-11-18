@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.19)
+project(OSGSimNativeWireTests LANGUAGES CXX)
+add_executable(osg_wire_smoke wire_smoke.cpp)
+target_compile_features(osg_wire_smoke PRIVATE cxx_std_17)
+target_include_directories(osg_wire_smoke PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+enable_testing()
+add_test(NAME bridge_wire_serializer COMMAND osg_wire_smoke)

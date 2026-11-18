@@ -1,0 +1,91 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> osg-sim-integration@0.2.1-dev verify:portable
+> npm test && npm run test:wire
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> osg-sim-integration@0.2.1-dev test
+> node --test tests/*.test.mjs
+
+✔ bridge configured with token rejects unauthenticated and invalid producers before accepting any telemetry (361.186843ms)
+✔ cross-site WebSocket Origin is rejected; same-site browser Origin is accepted (6.791453ms)
+✔ concurrent journal writers are serialized and every entry is valid after restart (50.028036ms)
+✔ assets cannot be overwritten by corrupt content with a forged content-hash filename (15.456922ms)
+✔ contact contains recoverable physical asset and three observers have distinct causal arrival times (101.988723ms)
+✔ recorder importer creates real immutable source hashes/checkpoints and rejects ambiguous reimport (361.316943ms)
+✔ native poststep transition yields exactly one durable CONTACT_BEGIN, rejects duplicate source sequence (103.651132ms)
+✔ HTTP recording has exact source, gap policy and no false native attribution (27.817191ms)
+✔ journal is hash chained, durable, idempotent and restart stable (27.460316ms)
+✔ asset store validates content hashes, stores precise IEEE-754 values (7.855167ms)
+✔ Hermite interpolates position endpoints and derivatives for straight motion (4.250298ms)
+✔ slerp handles sign-equivalent quaternions and normalizes (0.575115ms)
+✔ rotation conversion reconstructs normalized quaternion (0.643566ms)
+✔ 4D gaussian uses correct conditional mean/covariance and strict onset (1.472704ms)
+✔ rejects non-SPD covariance and reflected reference frames (0.304517ms)
+✔ double precision subtraction before Float32 projection (0.239493ms)
+✔ native-journal verification distinguishes locally authenticated sample from simulator provenance (143.415039ms)
+✔ real local network: 3 WebSocket observers receive native transport samples and contact; late joiner resyncs all entities (142.650742ms)
+✔ journal events survive restart without being misrepresented as current live telemetry (130.730177ms)
+✔ new run isolates live vessel cache and event replay from previous run while preserving journal history (68.240874ms)
+✔ 24 independent SciPy Hermite position and derivative reference cases (5.690836ms)
+✔ 24 independent SciPy matrix/quaternion reference cases (2.358997ms)
+✔ 24 independent NumPy block-solve conditional Gaussian reference cases (3.089232ms)
+✔ small covariance units preserve positive definiteness and symmetry checks (0.888866ms)
+✔ no early causal receipt is introduced by an arbitrary comparison epsilon (0.529087ms)
+✔ light travel delay for fixed reference observer equals Euclidean distance/c (1.264989ms)
+✔ moving observer receiving signal has self-consistent future position (0.374361ms)
+✔ no sensor sees information before its arrival time; missing locations remain unknown (0.455339ms)
+✔ invalid trajectories and propagation speeds fail closed (0.999509ms)
+✔ OSG adapter recovery is idempotent against an API-shape test double (NOT real LanceDB proof) (37.152114ms)
+✔ valid physical sample (1.631068ms)
+✔ rejects invalid/oversize/NaN input (1.16972ms)
+✔ sequence gate rejects missing/out-of-order events (0.568787ms)
+✔ event identity is stable by causal tuple (0.775581ms)
+✔ commands are deliberately bounded (0.339579ms)
+✔ real Metaverse recorder excerpt parsed with truthful metadata and no gap interpolation (17.50395ms)
+✔ polar radial conversion and tangent velocity (0.97927ms)
+✔ attitude stays in recorded horizon frame rather than unverified world quaternion (1.961703ms)
+✔ recorded LANDED is source evidence but not a native contact event (6.374224ms)
+✔ rejects unsupported and changing reference frames (1.519734ms)
+✔ physical assets preserve unknown orientation and independently encode contact/angular velocity (2.754189ms)
+✔ server restart refuses replay of a run even if it stopped before its first contact (26.043543ms)
+✔ recorder import preserves raw action and position source assets for independent replay (138.365546ms)
+✔ OSG adapter rejects unsafe canonical timestamp conversion before publishing (0.680861ms)
+✔ failed producer cannot inject valid queued frames after an invalid frame (84.004381ms)
+✔ replay service refuses native ingress instead of mixing authorities (68.281389ms)
+✔ regressing time, repeated vessel step and frame changes fail before state mutation (12.441138ms)
+✔ completed epochs cannot be replayed and existing observers receive reset (35.925475ms)
+✔ native frames require their coordinate frame and do not accept producer provenance claims (0.560063ms)
+✔ producer extras cannot leak token or forge transport provenance to observers (8.339569ms)
+✔ two journal writer instances cannot silently fork one file (2.465224ms)
+✔ journal snapshots append inputs before asynchronous queueing (1.753818ms)
+✔ journal deduplication scopes caller event IDs to run and epoch (1.912792ms)
+✔ Hermite velocity equals the derivative of the returned position (0.510941ms)
+✔ rotation APIs reject determinant-one shear and malformed rotations (0.426386ms)
+✔ recorder cannot silently mix time origins or accept unsupported coordinate frames (0.207845ms)
+✔ selected browser vessel ignores other vessels and old-epoch contacts (2.294323ms)
+✔ WebSocket handles the exact 65536-byte envelope boundary (1.696063ms)
+✔ WebSocket stops buffering when a reader falls behind (0.511722ms)
+✔ Host validation blocks rebinding-style requests (52.880458ms)
+✔ WebSocket reassembles a split masked ping and returns pong (65.404995ms)
+✔ failed startup releases the journal writer lock (6.704155ms)
+✔ read-only journal verification never truncates an incomplete tail (1.494116ms)
+✔ simultaneous exported ingestion calls are serialized (16.276592ms)
+✔ trajectory comparator cannot print PASS for one sample (66.475178ms)
+✔ sparse coordinate arrays fail validation (0.593843ms)
+ℹ tests 66
+ℹ suites 0
+ℹ pass 66
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 820.789412
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> osg-sim-integration@0.2.1-dev test:wire
+> node scripts/test-wire.mjs
+
+CMake unavailable: used direct C++17 compiler; CTest was not run
+PASS: C++17 native serializer assertions and JavaScript wire protocol roundtrip

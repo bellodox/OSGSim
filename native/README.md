@@ -4,8 +4,10 @@ This is source code for a Windows x64 SDK module following `Src/Plugin/FlightDat
 
 The bridge reads `VESSEL::GroundContact()` strictly from `clbkPostStep`, after the simulator has accepted the physical step. It publishes physical samples over localhost TCP port 4378. The world-service detects false/true transitions and journals resulting contact events. Any bridge queue overflow or network send error invalidates the capture rather than silently dropping data.
 
-The bridge is read-only. The separately supplied v0.2.1 DLL was compiled and
+The bridge is read-only. The separately supplied v0.3.1 DLL was cross-compiled for Windows x64 and
 its imports inspected, but actual simulator loading and callbacks remain unverified.
+Replace the older DLL for stable IDs, capture timestamps and ENTITY_REMOVED events.
+Names are bounded UTF-8 display metadata, separate from vessel identity.
 The updated CMake build in this overlay has not been executed on Windows here.
 
 For complete setup and operation, see [../docs/WINDOWS_SETUP.md](../docs/WINDOWS_SETUP.md).
@@ -33,3 +35,6 @@ Start the Node world-service first, then the simulator. Capture actual DLL load,
 contact and physics comparison logs before classifying R04–R06.
 
 Known limitations: no network reconnect synchronization after server restart, no validated spacecraft control, no persistent native run across crashes, no native CI. There is an explicit native acceptance checklist in `docs/WINDOWS_TESTING.md`.
+
+
+The 0.4.0 bridge adds `OSGSimVisual.hpp`: native body/Sun pose, actual exhaust descriptors, ShuttlePB animation state and bounded cached Moon elevation capture. Rebuild before using the 4D landing renderer; old binaries remain telemetry-only. The portable serializer test covers the new JSON, while SDK callback behavior and Windows load require the separate native acceptance run. See `docs/LANDING_SCENE_0.4.0.md`.

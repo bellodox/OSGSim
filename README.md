@@ -1,4 +1,10 @@
-# OSG Sim — development checkpoint v0.2.1
+# OSG Sim — development checkpoint v0.4.0-dev
+
+The new [4D landing scene](docs/LANDING_SCENE_0.4.0.md) uses the actual ShuttlePB asset, committed motion, native visual descriptors and captured lunar elevations. Run `npm run start:landing` for its explicitly synthetic demo. Rebuild the bridge for native visual capture. GPU and new DLL acceptance are not claimed.
+
+For v0.3.1 installation, the matching OSG update, native DLL replacement and validation, see [OSG_0.3.1.md](docs/OSG_0.3.1.md). This fixes the code-audit defects, peer-load telemetry delay, activity recovery and native deletion. The new DLL provides stable vessel IDs, display names, removal events and capture timestamps. Native `npm start` requires the matching built `osg-multi`; `OSG_WORLD_MODE=0` selects the earlier native path. Historical Windows/GPU acceptance evidence remains separate.
+
+Experimental live OSG world mode and concurrent browser/agent clients: [setup and limits](docs/OSG_WORLD_MODE.md).
 
 **Status: PARTIAL — executable integration source for independent native acceptance.**
 
@@ -27,17 +33,14 @@ Open `http://127.0.0.1:4377/?observer=A` and the B/C links. This opens the
 **actual published Metaverse Earth-flight-recorder excerpt**. Its deliberate
 data gap is shown as missing; `LANDED Earth` is a recorded action, not
 `GroundContact()` physics evidence. Independent observers have independent
-camera/timeline controls. PlayCanvas rendering requires a local PlayCanvas
-module or access to the pinned CDN; its Gaussian GPU path is still unverified.
+camera/timeline controls. The pinned PlayCanvas module is now included locally; its actual Gaussian GPU path remains unverified here.
 
 ```bash
 npm run test:wire          # build C++17 portable bridge serializer; C++ compiler required; CMake preferred, direct g++ fallback on Linux
-npm run verify:portable   # 66 Node tests plus C++/JS serializer round-trip
+npm run verify:portable   # Node tests plus C++/JS serializer round-trip
 ```
 
-The browser uses a Canvas2D reference projection by default. Click `ENABLE
-PLAYCANVAS 3D` only when a supported PlayCanvas runtime is available; the path
-is experimental, not an accepted GPU test. Gaussian centers/visibility depend
+The older recorder still uses its Canvas2D reference projection. The landing demo and native visual captures automatically enable the 4D scene. `ENABLE 4D SCENE` can retry initialization; a loaded module is not an accepted GPU test. Gaussian centers/visibility depend
 on **simulation** time, not wall-clock time.
 
 ## Live native development mode

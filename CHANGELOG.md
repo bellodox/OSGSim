@@ -1,5 +1,15 @@
 # v0.2.1-dev — 2026-11-18
 
+## 0.4.0-dev — 2026-11-18
+
+- Apply the supplied cumulative 0.3.1 native/OSG integration baseline over GitHub main 95a186e.
+- Replace the capsule/contact illustration with the Moon/ShuttlePB scene-data and 4D rendering path, real source mesh/DDS import, full anisotropic splats, native pose/wing/exhaust/Sun descriptors and captured elevation assets.
+- Use the existing 4D conditional slicer for factored rigid-cloud motion and finite-support exhaust, with Hermite/SLERP and explicit frame conversion.
+- Preserve graph-pinned replay, missing-state and lifecycle semantics. Browser frames make no graph writes.
+- Include local MIT PlayCanvas assets, an explicitly synthetic demo, real OSG scene persistence tests and a GPU acceptance runner.
+- Portable and real OSG checks pass; GPU execution and the changed Windows DLL remain unverified. Native lunar albedo and particle-system replay are not captured. See docs/LANDING_SCENE_0.4.0.md.
+
+
 - Fixed post-failure queued ingestion, unbounded ingress scheduling, forged or leaked sample metadata, and replay/live mixing.
 - Added loopback Host checks, bounded WebSocket clients/backpressure, split ping/pong handling and the 64 KiB frame boundary.
 - Added run/epoch/time/frame/vessel-step validation, durable initial checkpoints and reset notifications; recovered runs require a new simulator run.

@@ -45,7 +45,7 @@ export class OsgAdapter {
     if(!Array.isArray(entries))throw new Error('journal entries required');
     let processed=0,changed=0;
     for(const entry of entries) {
-      if(!entry?.eventId || !['CONTACT_BEGIN','CONTACT_END','CHECKPOINT','SIMULATION_RESET'].includes(entry.type))continue;
+      if(!entry?.eventId || !['CONTACT_BEGIN','CONTACT_END','CHECKPOINT','SIMULATION_RESET','ENTITY_REMOVED'].includes(entry.type))continue;
       const result=await this.appendObservedEvent(entry,entry.assetHash??null);
       processed++;
       if(!result.noop && !result.idempotent)changed++;

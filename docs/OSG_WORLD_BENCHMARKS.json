@@ -1,0 +1,203 @@
+{
+  "measuredDate": "2026-11-18",
+  "environment": "Linux x64, Node 24.22.3, actual separately built OSG and LanceDB 0.40.0, temporary local stores",
+  "qualification": "Synthetic physics-shaped input; accelerated finite runs, not a controlled production load test or Windows/GPU evidence. Earlier development comparisons predate the final graph-native entity/frame registry, origin reconstruction and additional guards. Final source case measures the completed implementation. Some development runs shared the Linux host with tests. Node RSS is process-wide and includes native libraries, not graph cache alone.",
+  "cases": {
+    "smallBatchDevelopment": {
+      "scope": "Synthetic inputs, real OSG/LanceDB, one vessel and periodic concurrent-client annotations; not Windows physics/GPU evidence",
+      "node": "v24.22.3",
+      "batches": 200,
+      "samples": 2600,
+      "wallMs": 13010.349463,
+      "throughputSamplesPerSecond": 199.8409041505083,
+      "batchLatency": {
+        "medianMs": 59.303383000000395,
+        "p95Ms": 111.62562400000024,
+        "maxMs": 139.19477800000004
+      },
+      "first20": {
+        "medianMs": 65.22486600000002,
+        "p95Ms": 99.562525,
+        "maxMs": 99.562525
+      },
+      "last20": {
+        "medianMs": 65.34969100000126,
+        "p95Ms": 127.06724600000052,
+        "maxMs": 127.06724600000052
+      },
+      "coldReopenAndQueryMs": 227.7312520000014,
+      "lastReconstructedStep": 2600,
+      "rssBytes": 291016704,
+      "worldRevision": {
+        "head": "c4895f2b875399f1fc0753175dd21649a38a86d51fff261a3a42680dd88dbe0aa",
+        "generation": 210
+      }
+    },
+    "largeBatchDevelopment": {
+      "scope": "Synthetic inputs, real OSG/LanceDB and periodic client annotations; not Windows physics/GPU evidence",
+      "node": "v24.22.3",
+      "batches": 200,
+      "samplesPerBatch": 125,
+      "vessels": 10,
+      "samples": 25000,
+      "wallMs": 22011.521295000002,
+      "throughputSamplesPerSecond": 1135.76883964303,
+      "batchLatency": {
+        "medianMs": 96.58291700000063,
+        "p95Ms": 197.5179649999991,
+        "maxMs": 337.60120599999937
+      },
+      "first20": {
+        "medianMs": 136.95861999999988,
+        "p95Ms": 196.79106900000005,
+        "maxMs": 196.79106900000005
+      },
+      "last20": {
+        "medianMs": 78.25910100000328,
+        "p95Ms": 146.65565699999934,
+        "maxMs": 146.65565699999934
+      },
+      "coldReopenAndQueryMs": 989.1441059999997,
+      "lastReconstructedStep": 2500,
+      "rssBytes": 357355520,
+      "worldRevision": {
+        "head": "c8deff01b97cb8487dfee04a22e5fccbf074f1ef789c8be0ef4820530f85db047",
+        "generation": 210
+      }
+    },
+    "longBeforeSparseEventIndex": {
+      "scope": "Synthetic inputs, real OSG/LanceDB and periodic client annotations; not Windows physics/GPU evidence",
+      "node": "v24.22.3",
+      "batches": 1000,
+      "samplesPerBatch": 125,
+      "vessels": 10,
+      "samples": 125000,
+      "wallMs": 97290.211883,
+      "throughputSamplesPerSecond": 1284.815785480285,
+      "batchLatency": {
+        "medianMs": 84.015876999998,
+        "p95Ms": 184.63603899998998,
+        "maxMs": 428.8814229999989
+      },
+      "first20": {
+        "medianMs": 72.520851,
+        "p95Ms": 192.38281099999995,
+        "maxMs": 192.38281099999995
+      },
+      "last20": {
+        "medianMs": 99.08837100000528,
+        "p95Ms": 273.27621100000397,
+        "maxMs": 273.27621100000397
+      },
+      "coldReopenAndQueryMs": 5910.368557000009,
+      "lastReconstructedStep": 12500,
+      "rssBytes": 545902592,
+      "worldRevision": {
+        "head": "c4ccb49ae15582c1c7544ea8f91c0f52d0513d407e1667dd1c722c44c98383d1f",
+        "generation": 1055
+      }
+    },
+    "longAfterSparseEventIndexDevelopment": {
+      "scope": "Synthetic inputs, real OSG/LanceDB and periodic client annotations; not Windows physics/GPU evidence",
+      "node": "v24.22.3",
+      "batches": 1000,
+      "samplesPerBatch": 125,
+      "vessels": 10,
+      "samples": 125000,
+      "wallMs": 99180.403884,
+      "throughputSamplesPerSecond": 1260.3296125532845,
+      "batchLatency": {
+        "medianMs": 88.04297999999835,
+        "p95Ms": 190.0022170000011,
+        "maxMs": 417.39725900000485
+      },
+      "first20": {
+        "medianMs": 107.95704999999998,
+        "p95Ms": 299.59372299999995,
+        "maxMs": 299.59372299999995
+      },
+      "last20": {
+        "medianMs": 101.46890999999596,
+        "p95Ms": 202.19597200000135,
+        "maxMs": 202.19597200000135
+      },
+      "coldReopenAndQueryMs": 457.50687499999185,
+      "lastReconstructedStep": 12500,
+      "rssBytes": 538021888,
+      "worldRevision": {
+        "head": "c63235e3a11aa104972c9a20dccc2931d0ac21fd91c2f9ce31bbc9c0f47e75e9b",
+        "generation": 1054
+      }
+    },
+    "finalSource25000Samples": {
+      "scope": "Synthetic inputs, real OSG/LanceDB and periodic client annotations; not Windows physics/GPU evidence",
+      "node": "v24.22.3",
+      "batches": 200,
+      "samplesPerBatch": 125,
+      "vessels": 10,
+      "samples": 25000,
+      "wallMs": 15692.363655,
+      "throughputSamplesPerSecond": 1593.1315733964873,
+      "batchLatency": {
+        "medianMs": 68.61967900000127,
+        "p95Ms": 138.62925199999972,
+        "maxMs": 286.9191719999999
+      },
+      "first20": {
+        "medianMs": 70.37906700000008,
+        "p95Ms": 144.76921399999998,
+        "maxMs": 144.76921399999998
+      },
+      "last20": {
+        "medianMs": 96.24468100000013,
+        "p95Ms": 165.00305800000024,
+        "maxMs": 165.00305800000024
+      },
+      "coldReopenAndQueryMs": 350.9617930000004,
+      "lastReconstructedStep": 2500,
+      "rssBytes": 380198912,
+      "worldRevision": {
+        "head": "c516cfe592acf983f7abd7c94d4a9c135cea17cb446385cb6c6feaacb7a2715a0",
+        "generation": 210
+      }
+    },
+    "beforeNarrowStorageLookupsWithEntityGraph": {
+      "scope": "Synthetic inputs, real OSG/LanceDB and periodic client annotations; not Windows physics/GPU evidence",
+      "node": "v24.22.3",
+      "batches": 200,
+      "samplesPerBatch": 125,
+      "vessels": 10,
+      "samples": 25000,
+      "wallMs": 50923.820047999994,
+      "throughputSamplesPerSecond": 490.9293917156135,
+      "batchLatency": {
+        "medianMs": 232.4649989999998,
+        "p95Ms": 457.28194899999653,
+        "maxMs": 894.3799619999991
+      },
+      "first20": {
+        "medianMs": 92.756752,
+        "p95Ms": 309.0975790000002,
+        "maxMs": 309.0975790000002
+      },
+      "last20": {
+        "medianMs": 192.02914800000144,
+        "p95Ms": 894.3799619999991,
+        "maxMs": 894.3799619999991
+      },
+      "coldReopenAndQueryMs": 407.84428600000683,
+      "lastReconstructedStep": 2500,
+      "rssBytes": 392675328,
+      "worldRevision": {
+        "head": "c516cfe592acf983f7abd7c94d4a9c135cea17cb446385cb6c6feaacb7a2715a0",
+        "generation": 210
+      }
+    }
+  },
+  "sourceHashes": {
+    "OmniSpatialGraphWorld": "2c936f1860e16403570e84bede6eddccfe104ec0de2772c1d70f0b213dac5f82",
+    "OmniSpatialGraphStorage": "15d716205e20ebf443e7c19ac6d6d14fbdf6cb2b8e99ced52d279998f6921236",
+    "OSGSimAdapter": "40c7d71791c3b7e50e95b28d3995d8ea7d3ca50bfc71668f3049cf5564f3abf8",
+    "OSGSimServer": "250df6d9a65bebd6e5141e75d2c47bf9a85bb11dfb3e080bbaa5aff750824804"
+  }
+}

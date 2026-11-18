@@ -3,6 +3,7 @@
 // Portable, deterministic bridge wire serializer. No Windows or simulator SDK dependencies.
 // Compiled independently on Linux and with MSVC on the Windows native acceptance machine.
 #include <array>
+#include "OSGSimVisual.hpp"
 #include <cmath>
 #include <cstdint>
 #include <iomanip>
@@ -24,7 +25,16 @@ struct Sample {
   V3 position{},velocity{},angularVelocity{};
   M3 rotation{};
   bool contact=false;
+  bool removed=false;
+  std::string name;
+  std::uint64_t capturedAtUnixMs=0;
+  bool hasVisual=false;
+  Visual visual;
 };
+inline std::string jsonString(const std::string& raw) {
+  std::string value;constexpr char hex[]="0123456789abcdef";
+  for(unsigned char c:raw){if(c=='"'||c=='\\'){value+='\\';value+=char(c);}else if(c<32){value+="\\u00";value+=hex[c>>4];value+=hex[c&15];}else value+=char(c);}return value;
+}
 inline std::string cleanName(const std::string& raw) {
   if(raw.empty())throw std::invalid_argument("empty vessel name");
   std::string result="vessel-";
@@ -55,28 +65,60 @@ inline Q4 rotationQuaternion(const M3& m) {
   if(!std::isfinite(norm)||norm<1e-12)throw std::invalid_argument("invalid rotation quaternion");
   return {x/norm,y/norm,z/norm,w/norm};
 }
+inline void formatVisual(std::ostringstream& out,const Visual& v) {
+  if(v.vesselClass.empty()||v.vesselClass.size()>128||v.bodyName.empty()||v.bodyName.size()>128||!std::isfinite(v.bodyRadius)||v.bodyRadius<=0||!std::isfinite(v.main)||v.main<0||v.main>1||!std::isfinite(v.hover)||v.hover<0||v.hover>1)throw std::invalid_argument("invalid visual descriptor");
+  for(const auto& p:{v.bodyPosition,v.sunPosition,v.animations})for(double x:p)if(!std::isfinite(x))throw std::invalid_argument("nonfinite visual state");
+  for(double a:v.animations)if(a<0||a>1)throw std::invalid_argument("invalid animation");
+  const auto q=rotationQuaternion(v.bodyRotation);
+  out<<",\"visual\":{\"version\":1,\"vesselClass\":\""<<jsonString(v.vesselClass)<<"\",\"bodyName\":\""<<jsonString(v.bodyName)<<"\",\"bodyRadius\":"<<v.bodyRadius;
+  out<<",\"bodyPosition\":["<<v.bodyPosition[0]<<","<<v.bodyPosition[1]<<","<<v.bodyPosition[2]<<"],\"bodyOrientation\":["<<q[0]<<","<<q[1]<<","<<q[2]<<","<<q[3]<<"]";
+  out<<",\"sunPosition\":["<<v.sunPosition[0]<<","<<v.sunPosition[1]<<","<<v.sunPosition[2]<<"],\"main\":"<<v.main<<",\"hover\":"<<v.hover<<",\"animations\":["<<v.animations[0]<<","<<v.animations[1]<<","<<v.animations[2]<<"]";
+  out<<",\"exhausts\":[";
+  if(v.exhausts.size()>32)throw std::invalid_argument("too many exhausts");
+  for(size_t i=0;i<v.exhausts.size();++i){const auto& e=v.exhausts[i];if(i)out<<",";
+    for(double x:e.position)if(!std::isfinite(x))throw std::invalid_argument("invalid nozzle position");
+    double norm=0;for(double x:e.direction){if(!std::isfinite(x))throw std::invalid_argument("invalid nozzle direction");norm+=x*x;}
+    if(std::abs(norm-1)>1e-3||!std::isfinite(e.length)||e.length<=0||!std::isfinite(e.width)||e.width<=0||!std::isfinite(e.level)||e.level<0||e.level>1)throw std::invalid_argument("invalid nozzle");
+    out<<"{\"position\":["<<e.position[0]<<","<<e.position[1]<<","<<e.position[2]<<"],\"direction\":["<<e.direction[0]<<","<<e.direction[1]<<","<<e.direction[2]<<"],\"length\":"<<e.length<<",\"width\":"<<e.width<<",\"level\":"<<e.level<<"}";
+  }out<<"]";
+  if(!v.terrainId.empty())out<<",\"terrainId\":\""<<jsonString(v.terrainId)<<"\"";
+  if(v.terrain){
+    const auto& t=*v.terrain;
+    if(t.size<3||t.size>33||t.size%2==0||t.heights.size()!=static_cast<size_t>(t.size*t.size)||t.id!=v.terrainId||t.bodyName!=v.bodyName||t.radius!=v.bodyRadius)throw std::invalid_argument("invalid terrain patch");
+    for(double h:t.heights)if(!std::isfinite(h))throw std::invalid_argument("invalid terrain elevation");
+    out<<",\"terrain\":{\"version\":1,\"id\":\""<<jsonString(t.id)<<"\",\"bodyName\":\""<<jsonString(t.bodyName)<<"\",\"radius\":"<<t.radius<<",\"longitude\":"<<t.longitude<<",\"latitude\":"<<t.latitude<<",\"spacing\":"<<t.spacing<<",\"size\":"<<t.size<<",\"elevationLevel\":"<<t.elevationLevel<<",\"heights\":[";
+    for(size_t i=0;i<t.heights.size();++i){if(i)out<<",";out<<t.heights[i];}out<<"]}";
+  }
+  out<<"}";
+}
 inline std::string formatSample(const Sample& s) {
   if(s.run.empty()||s.run.size()>128||s.run.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")!=0||s.run.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.:-")!=std::string::npos)
     throw std::invalid_argument("invalid run identifier");
-  if(s.step==0||s.sequence==0||!std::isfinite(s.time)||!std::isfinite(s.dt)||s.dt<0)
+  if((!s.removed&&s.step==0)||s.sequence==0||!std::isfinite(s.time)||!std::isfinite(s.dt)||s.dt<0)
     throw std::invalid_argument("invalid time/sequence");
   constexpr std::uint64_t safeMax=9007199254740991ULL;
-  if(s.epoch>safeMax||s.step>safeMax||s.sequence>safeMax)throw std::invalid_argument("unsafe JS integer");
+  if(s.epoch>safeMax||s.step>safeMax||s.sequence>safeMax||s.capturedAtUnixMs>safeMax)throw std::invalid_argument("unsafe JS integer");
+  if(s.removed){std::ostringstream out;out.imbue(std::locale::classic());out<<std::setprecision(17)
+    <<"{\"version\":1,\"wireFormat\":2,\"type\":\"ENTITY_REMOVED\",\"source\":\"native\",\"runId\":\""<<s.run<<"\",\"epoch\":"<<s.epoch<<",\"step\":"<<s.step<<",\"sequence\":"<<s.sequence
+    <<",\"capturedAtUnixMs\":"<<s.capturedAtUnixMs<<",\"simTime\":"<<s.time<<",\"simDt\":0,\"frameId\":\"metaverse-global-ecliptic\",\"entityId\":\""<<cleanName(s.entity)<<"\"}\n";return out.str();}
   for(const auto& v:{s.position,s.velocity,s.angularVelocity})for(double x:v)
     if(!std::isfinite(x))throw std::invalid_argument("non-finite physical state");
   const auto q=rotationQuaternion(s.rotation);
   std::ostringstream out;
   out.imbue(std::locale::classic());
   out<<std::setprecision(17);
-  out<<"{\"version\":1,\"type\":\"PHYSICS_SAMPLE\",\"source\":\"native\",\"runId\":\""<<s.run
+  out<<"{\"version\":1,\"wireFormat\":2,\"type\":\"PHYSICS_SAMPLE\",\"source\":\"native\",\"runId\":\""<<s.run
      <<"\",\"epoch\":"<<s.epoch<<",\"step\":"<<s.step<<",\"sequence\":"<<s.sequence
-     <<",\"simTime\":"<<s.time<<",\"simDt\":"<<s.dt
+     <<",\"capturedAtUnixMs\":"<<s.capturedAtUnixMs<<",\"simTime\":"<<s.time<<",\"simDt\":"<<s.dt
      <<",\"frameId\":\"metaverse-global-ecliptic\",\"entityId\":\""<<cleanName(s.entity)<<"\""
+     <<",\"entityName\":\""<<jsonString(s.name)<<"\""
      <<",\"position\":["<<s.position[0]<<","<<s.position[1]<<","<<s.position[2]<<"]"
      <<",\"velocity\":["<<s.velocity[0]<<","<<s.velocity[1]<<","<<s.velocity[2]<<"]"
      <<",\"angularVelocity\":["<<s.angularVelocity[0]<<","<<s.angularVelocity[1]<<","<<s.angularVelocity[2]<<"]"
      <<",\"orientation\":["<<q[0]<<","<<q[1]<<","<<q[2]<<","<<q[3]<<"]"
-     <<",\"contact\":"<<(s.contact?"true":"false")<<"}\n";
+     <<",\"contact\":"<<(s.contact?"true":"false");
+  if(s.hasVisual)formatVisual(out,s.visual);
+  out<<"}\n";
   return out.str();
 }
 } // namespace osgsim

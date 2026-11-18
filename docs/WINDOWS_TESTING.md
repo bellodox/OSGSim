@@ -1,5 +1,7 @@
 # Windows native acceptance — v0.2.1
 
+For the current 0.3.1 matching OSG checkout, required DLL update and added native lifecycle checks, start with [OSG_0.3.1.md](OSG_0.3.1.md). Historical acceptance gates below remain separate.
+
 These are **tests to be executed on the user's Windows x64 Metaverse machine**.
 They have not been executed in the Linux authoring environment. Provide the
 actual results; do not infer a successful simulator load from a portable C++ test.
@@ -169,3 +171,8 @@ offset is not terrain altitude.
 Run `npm run test:e2e` after provisioning Python, Playwright and Chromium. This uses
 real local HTTP/WebSocket transport and synthetic native-shaped samples to check
 UI behavior. It is distinct from real SDK touchdown and actual PlayCanvas GPU tests.
+
+
+## 0.4.0 visual-capture acceptance
+
+Follow [LANDING_SCENE_0.4.0.md](LANDING_SCENE_0.4.0.md) for the complete renderer runbook. Rebuild the DLL from this version; the 0.3.1 binary does not export visual descriptors. Validate the same native physics and actual contact gates above. Confirm `visual.vesselClass`, body pose, exhaust levels and immutable `terrainHash` in OSG-backed samples. Check that the completed terrain patch's elevation level matches available source data, the vessel renders at its recorded orientation and meter scale, and pause/seek/reconnect retain the correct scene. Measure the four-per-step cached SDK elevation queries against a bridge-disabled baseline. A synthetic demo screenshot, portable C++ pass or previous DLL binary is not evidence of this changed DLL loading.

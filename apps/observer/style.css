@@ -5,3 +5,8 @@
 .causal-monitor>span{font-size:8px;font-weight:600;letter-spacing:1px;color:var(--muted)}
 .causal-monitor strong{font-size:12px;letter-spacing:.35px;color:var(--teal)}
 .causal-monitor small{font-size:9px;line-height:1.5;color:var(--soft)}
+
+/* Shared activity input remains separate from physical controls. */
+.side-panel details input,.side-panel details textarea{display:block;width:100%;box-sizing:border-box;margin:8px 0;padding:8px;background:#111923;color:#e8edf5;border:1px solid #45515f;font:inherit}.side-panel details button{margin:4px;padding:6px 10px}.side-panel details textarea{min-height:72px}.side-panel h3{font-size:12px}.side-panel p{overflow-wrap:anywhere}
+
+#scene-details{display:block;color:var(--muted);font:10px/1.5 var(--mono);max-width:250px}.panel-toolbar{flex-wrap:wrap}.scene-wrap.is-4d:before{display:none}

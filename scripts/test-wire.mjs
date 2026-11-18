@@ -28,7 +28,10 @@ try {
  }
  const sample=validateEnvelope(JSON.parse(run(binary,[]).trim()));
  if(sample.runId!=='native-smoke-1'||sample.position[0]!==1000000000.125||
-     sample.contact!==true||Math.abs(Math.hypot(...sample.orientation)-1)>1e-12)
+     sample.contact!==true||sample.capturedAtUnixMs!==1763500000123||Math.abs(Math.hypot(...sample.orientation)-1)>1e-12)
    throw Error('Native C++ output did not match the JS wire oracle');
+ const removed=validateEnvelope(JSON.parse(run(binary,['removed']).trim()));if(removed.type!=='ENTITY_REMOVED'||removed.entityId!=='vessel-17'||removed.wireFormat!==2)throw Error('Removal wire mismatch');
+ const named=validateEnvelope(JSON.parse(run(binary,['named']).trim()));if(named.entityId!=='vessel-17'||named.entityName!=='A B \"quoted\" €')throw Error('Display-name encoding mismatch');
+ const visual=validateEnvelope(JSON.parse(run(binary,['visual']).trim()));if(visual.visual?.terrain?.heights.length!==81||visual.visual.vesselClass!=='ShuttlePB')throw Error('Visual wire mismatch');
  console.log('PASS: C++17 native serializer assertions and JavaScript wire protocol roundtrip');
 }finally{await rm(dir,{recursive:true,force:true});}

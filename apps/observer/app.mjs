@@ -1,3 +1,7 @@
+import {LandingTimeline} from '/packages/landing-scene/timeline.mjs';
+import {worldFeedFresh} from './freshness.mjs';
+import {worldFrames} from './world-state.mjs';
+import {mountActivities} from './activities.mjs';
 // SPDX-License-Identifier: MIT
 import { createPlayCanvasScene } from './playcanvas-bridge.mjs';
 import { applyNativeFrame } from './native-state.mjs';
@@ -19,8 +23,10 @@ q('#observer-label').innerHTML=id+'<span class="outline-triangle">△</span>';
 for(const x of ['A','B','C'])if(x===id)q('#link-'+x).classList.add('active');
 q('#camera-yaw').value=String(initialYaw);q('#yaw-value').textContent=initialYaw+'°';
 const canvas=q('#scene-2d'),ctx=canvas.getContext('2d');
-const state={mode:'waiting',samples:[],events:[],position:null,runId:null,
-  simTime:0,minTime:0,maxTime:240,playing:false,azimuth:initialYaw,zoom:1,source:'unknown',
+const sceneTimeline=new LandingTimeline();
+const pollActivities=mountActivities(document.querySelector('.side-stack'));
+const state={worldMode:false,worldLive:true,worldHead:null,worldPinnedHead:null,worldStream:null,worldRequest:0,mode:'waiting',samples:[],events:[],position:null,runId:null,
+  sceneClock:null,sceneLoading:false,cameraElevation:22,simTime:0,minTime:0,maxTime:240,playing:false,azimuth:initialYaw,zoom:1,source:'unknown',
   lastNative:null,contactNative:false,pc:null,heightReference:0,recordingGap:false,
   error:null,frame:'UNAVAILABLE',authenticated:false,nativeLive:false,requestedEntity:params.get('entity')};
 const number=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
@@ -59,6 +65,7 @@ function interpolate(t){
     velocity:pa.map((v,k)=>(6*u*u-6*u)*v/delta+(3*u*u-4*u+1)*va[k]+(-6*u*u+6*u)*pb[k]/delta+(3*u*u-2*u)*vb[k]),interpolated:true};
 }
 function getPhysicalState(){
+  if(state.mode==='landing-demo')return sceneTimeline.at(state.simTime).find(s=>s.entityId===state.selectedEntity)??null;
   if(state.mode==='recorded')return interpolate(state.simTime);
   if(state.mode==='native')return state.lastNative;
   return null;
@@ -76,6 +83,10 @@ function contactOpacity(t){
   return clamp(.28+.65*Math.exp(-Math.max(0,t-start.simTime)/6),0,1);
 }
 function renderTelemetry(s){
+  if(state.mode==='landing-demo'&&s){
+    const body=s.visual.bodyPosition,h=Math.hypot(...s.position.map((v,i)=>v-body[i]))-s.visual.bodyRadius;
+    elements.height.textContent=number(h,2);elements.velocity.textContent=number(radius(s.velocity),2);elements.radius.textContent=number(s.visual.bodyRadius/1000,2);elements.step.textContent=String(s.step);elements.contact.textContent=s.contact?'DEMO END STATE':'SYNTHETIC DESCENT';elements.message.textContent='SYNTHETIC RENDERER FIXTURE · NOT NATIVE EVIDENCE';return;
+  }
   const missing=s?.unavailable;
   if(!s||missing){
     elements.height.textContent='—';elements.velocity.textContent='—';elements.radius.textContent='—';
@@ -93,7 +104,7 @@ function renderTelemetry(s){
   elements.contact.textContent=active?(state.mode==='native'?'POSTSTEP CONTACT EVENT':'RECORDER LANDED'):
     (state.mode==='native'&&s.contact?'GROUND CONTACT · INITIAL STATE':'NO CONFIRMED EVENT');
   elements.contact.className=active?'emphasis':'';
-  elements.message.textContent=state.mode==='native'?(state.nativeLive?'LIVE SDK POSTSTEP SAMPLE':'STALE · LAST ACCEPTED SAMPLE'):s.interpolated?'HERMITE INTERPOLATION · RECONSTRUCTED':'ORIGINAL FLIGHT-RECORDER SAMPLE';
+  elements.message.textContent=state.worldMode&&!state.worldLive?'OSG HISTORICAL SAMPLE · '+(state.worldPinnedHead??'').slice(0,12):state.mode==='native'?(state.nativeLive?'LIVE SDK POSTSTEP SAMPLE':'SOURCE IDLE OR DELAYED · LAST COMMITTED SAMPLE'):s.interpolated?'HERMITE INTERPOLATION · RECONSTRUCTED':'ORIGINAL FLIGHT-RECORDER SAMPLE';
 }
 function resizeCanvas(){
   const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
@@ -180,8 +191,9 @@ function drawScene(s){
   }
 }
 function tick(now){
+  if(state.worldMode)state.nativeLive=worldFeedFresh(state.latestStatus,{connected:state.feedConnected,live:state.worldLive,runId:state.worldStream?.runId,frameAgeMs:performance.now()-(state.lastWorldFrameAt??-Infinity),sourceAgeMs:state.lastNative?.capturedAtUnixMs>0?Date.now()-state.lastNative.capturedAtUnixMs:Infinity});
   const previous=state.previousNow??now,dt=clamp((now-previous)/1000,0,.15);state.previousNow=now;
-  if(state.mode==='recorded'&&state.playing){
+  if(['recorded','landing-demo'].includes(state.mode)&&state.playing){
     state.simTime+=dt;
     if(state.simTime>state.maxTime){state.simTime=state.maxTime;state.playing=false;elements.playIcon.textContent='▶';}
     elements.seek.value=String((state.simTime-state.minTime)/(state.maxTime-state.minTime)*1000);
@@ -191,23 +203,34 @@ function tick(now){
   elements.time.textContent='T + '+number(state.simTime,3).padStart(9,'0');
   elements.current.textContent=number(state.simTime,3)+' s';
   renderTelemetry(s);
-  if(state.pc){state.pc.update({height:s?.position?radius(s.position)-state.heightReference:0,azimuth:state.azimuth,zoom:state.zoom,contact:contactOpacity(state.simTime),simTime:state.simTime,available:!!s&&!s.unavailable});}
-  else drawScene(s);
+  if(state.pc){
+    const live=state.mode==='native'&&(!state.worldMode||state.worldLive)&&state.nativeLive;
+    let renderTime=state.simTime;
+    if(live&&state.sceneClock){const c=state.sceneClock;renderTime=Math.min(sceneTimeline.latest,c.time+(now-c.now)/1000*c.rate);}
+    try{state.pc.update({simTime:renderTime,azimuth:state.azimuth,zoom:state.zoom,elevation:state.cameraElevation,selectedEntity:state.selectedEntity,source:state.mode==='landing-demo'?'synthetic':state.worldMode?'osg':'native'});
+      const info=state.pc.stats,terrain=info.terrain;
+      q('#scene-details').textContent=info.error??`${info.vessels} vessel · ${info.splats.toLocaleString()} splats · ${terrain?(terrain.albedoKnown?'captured surface':'captured elevations / neutral surface'):'terrain pending'}`;
+    }catch(error){q('#scene-details').textContent='SCENE ERROR: '+error.message;}
+  }else drawScene(s);
   requestAnimationFrame(tick);
 }
 async function refreshStatus(){
-  try{const res=await fetch('/api/status');const info=await res.json();
+  try{const res=await fetch('/api/status');const info=await res.json();state.latestStatus=info;
+    void pollActivities(info);
     elements.status.textContent=`JOURNAL: #${info.journalHead.sequence} · ${info.journalHead.hash.slice(0,11)}`;
+    state.worldMode=info.osgWorldMode===true;state.nativeConnected=info.nativeConnected===true;
     elements.graph.textContent='OSG: '+(info.osgConnected?(info.osgHealthy?'CONNECTED':'DEGRADED'):'NOT CONFIGURED');
     elements.connection.textContent=info.nativeConnected?'NATIVE BRIDGE ONLINE':info.mode==='recorded'?'RECORDING REPLAY':'WAITING FOR NATIVE BRIDGE';
-    state.mode=info.mode;state.authenticated=info.nativeAuthenticated===true;
+    state.mode=info.landingDemo?'landing-demo':info.mode;state.authenticated=info.nativeAuthenticated===true;
     state.nativeLive=state.feedConnected===true&&info.nativeConnected===true&&
-      (!state.lastNative||(state.lastNative.runId===info.runId&&state.lastNative.step===info.latestStep));
-    if(info.mode==='native')state.runId=info.runId;
+      (state.worldMode?(state.worldLive&&info.osgHealthy):(!state.lastNative||(state.lastNative.runId===info.runId&&state.lastNative.step===info.latestStep)));
+    if(state.worldMode&&state.worldHead)elements.graph.textContent='OSG COMMIT: '+state.worldHead.slice(0,13);
+    if(info.mode==='native'&&!state.worldMode)state.runId=info.runId;
     if(info.errors?.length)state.error=info.errors.at(-1);
     if(info.mode==='native'){
       try {
-        const r=await fetch(`/api/observer-evidence?observer=${id}&time=${state.simTime}${state.selectedEntity?'&entity='+encodeURIComponent(state.selectedEntity):''}`);
+        const evidenceQuery=state.worldMode&&state.worldStream?`&runId=${encodeURIComponent(state.worldStream.runId)}&epoch=${state.worldStream.epoch}${state.worldPinnedHead?'&head='+encodeURIComponent(state.worldPinnedHead):''}`:'';
+        const r=await fetch(`/api/observer-evidence?observer=${id}&time=${state.simTime}${evidenceQuery}${state.selectedEntity?'&entity='+encodeURIComponent(state.selectedEntity):''}`);
         if(r.ok){
           const evidence=await r.json();
           const shown=Array.isArray(evidence.events)?evidence.events:[];
@@ -224,6 +247,7 @@ async function refreshStatus(){
 }
 async function init(){
   try{await refreshStatus();
+    if(state.mode==='landing-demo'){await loadLandingDemo();requestAnimationFrame(tick);setInterval(refreshStatus,1000);return;}
     const res=await fetch('/api/recording');
     if(res.ok){const info=await res.json();state.mode='recorded';state.source='recorded';state.samples=info.samples;
       state.minTime=state.samples[0].time;state.maxTime=state.samples.at(-1).time;state.simTime=state.minTime;
@@ -251,32 +275,113 @@ async function init(){
     ws.addEventListener('message',event=>{
       let data;try{data=JSON.parse(event.data);}catch{return;}
       if(state.mode==='recorded')return;
-      const result=applyNativeFrame(state,data);
-      if(result.reset){elements.eventList.replaceChildren();elements.count.textContent='00 EVENTS';}
-      if(result.sample){state.nativeLive=true;elements.source.textContent=`NATIVE · ${data.entityId}`;elements.frame.textContent=data.frameId;}
-      if(result.event)appendEvent(data.type,data.simTime,'native','Poststep GroundContact transition',data.eventId);
+      if(data.type==='OSG_WORLD_REVISION'){state.worldHead=data.head;return;}
+      if(data.type==='OSG_WORLD_UPDATE'||data.type==='OSG_WORLD_SNAPSHOT'){
+        state.worldMode=true;state.worldHead=data.head;
+        if(!state.worldLive)return;
+        displayWorld(data);
+      }else if(!state.worldMode)displayNative(data);
     });
     ws.addEventListener('close',()=>{state.feedConnected=false;state.nativeLive=false;if(state.mode==='native')elements.connection.textContent='DISCONNECTED';setTimeout(connect,1000);});
     }
     connect();
-    setInterval(refreshStatus,3000);
+    setInterval(refreshStatus,1000);
   }catch(e){elements.message.textContent='INITIALIZATION ERROR: '+e.message;}
   requestAnimationFrame(tick);
 }
-q('#play-pause').addEventListener('click',()=>{if(state.mode!=='recorded')return;state.playing=!state.playing;elements.playIcon.textContent=state.playing?'Ⅱ':'▶';});
-q('#reset').addEventListener('click',()=>{state.playing=false;state.simTime=state.minTime;elements.seek.value='0';elements.playIcon.textContent='▶';});
-elements.seek.addEventListener('input',e=>{if(state.mode!=='recorded')return;state.playing=false;elements.playIcon.textContent='▶';state.simTime=state.minTime+Number(e.target.value)/1000*(state.maxTime-state.minTime);});
+function displayNative(data){
+  const old=sceneTimeline.entities.get(data.entityId)?.at(-1);
+  sceneTimeline.accept(data);state.pc?.ingest(data);
+  if(data.type==='PHYSICS_SAMPLE'||data.type==='WORLD_INIT'){
+    const dt=old?data.simTime-old.simTime:0,wall=old&&data.capturedAtUnixMs&&old.capturedAtUnixMs?(data.capturedAtUnixMs-old.capturedAtUnixMs)/1000:0;
+    const rate=wall>0?Math.min(1000,Math.max(0,dt/wall)):1;
+    state.sceneClock={time:Math.max(data.simTime-.25*rate,old?.simTime??data.simTime),now:performance.now(),rate};
+    if(data.visual&&!state.pc&&!state.sceneLoading)void enableScene();
+  }
+  const result=applyNativeFrame(state,data);
+  if(result.reset||result.removed){elements.eventList.replaceChildren();elements.count.textContent='00 EVENTS';}
+  if(result.removed){state.nativeLive=false;elements.source.textContent=`REMOVED · ${data.entityId}`;}
+  if(result.sample){if(data.visual)q('#scene-title').textContent=data.visual.vesselClass.toUpperCase()+' / '+data.visual.bodyName.toUpperCase();state.nativeLive=state.worldMode?(state.worldLive&&state.nativeConnected===true):true;elements.source.textContent=`${state.worldMode?'OSG':'NATIVE'} · ${data.entityId}`;elements.frame.textContent=data.frameId;}
+  if(result.event)appendEvent(data.type,data.simTime,'native','Poststep GroundContact transition',data.eventId);
+}
+function displayWorld(data){
+  if(data.frames?.some(f=>f.sample?.type==='PHYSICS_SAMPLE'))state.lastWorldFrameAt=performance.now();
+  for(const frame of worldFrames(data))displayNative(frame);
+  const origin=data.origins?.[state.selectedEntity];
+  if(origin){state.nativeOrigin=origin.slice();state.heightReference=radius(origin);}
+  if(data.runId!=null){
+    state.runId=data.runId;state.worldStream={runId:data.runId,epoch:data.epoch};
+    const stream=data.streams?.find(x=>x.runId===data.runId&&x.epoch===data.epoch);
+    if(stream){state.minTime=stream.firstTimeMicros/1e6;state.maxTime=stream.lastTimeMicros/1e6;
+      q('#timeline-range').textContent=`${number(state.minTime,2)} – ${number(state.maxTime,2)} s · OSG`;
+      if(state.worldLive)elements.seek.value='1000';}
+  }
+  elements.graph.textContent='OSG COMMIT: '+data.head.slice(0,13);
+  elements.data.textContent='SOURCE: COMMITTED OSG HISTORY';
+}
+async function seekWorld(timeMicros=null){
+  const request=++state.worldRequest,requestedAgainst=state.worldHead;
+  try{
+    const query=new URLSearchParams();
+    if(timeMicros!=null&&state.worldStream){
+      query.set('runId',state.worldStream.runId);query.set('epoch',state.worldStream.epoch);
+      query.set('timeMicros',String(timeMicros));query.set('head',state.worldPinnedHead);
+    }
+    const response=await fetch('/api/world/state?'+query),data=await response.json();
+    if(!response.ok)throw new Error(data.error);
+    if(request!==state.worldRequest)return;
+    if(state.worldLive&&state.worldHead!==requestedAgainst&&state.worldHead!==data.head)return;
+    if(state.worldLive)state.worldHead=data.head;
+    displayWorld(data);
+  }catch(error){elements.message.textContent='OSG QUERY FAILED: '+error.message;}
+}
+q('#play-pause').addEventListener('click',()=>{
+  if(state.worldMode){
+    state.worldLive=!state.worldLive;state.worldPinnedHead=state.worldLive?null:state.worldHead;
+    elements.playIcon.textContent=state.worldLive?'Ⅱ':'▶';
+    if(state.worldLive)seekWorld();return;
+  }
+  if(!['recorded','landing-demo'].includes(state.mode))return;state.playing=!state.playing;elements.playIcon.textContent=state.playing?'Ⅱ':'▶';
+});
+q('#reset').addEventListener('click',()=>{
+  if(state.worldMode){state.worldLive=true;state.worldPinnedHead=null;elements.playIcon.textContent='Ⅱ';seekWorld();return;}
+  state.playing=false;state.simTime=state.minTime;elements.seek.value='0';elements.playIcon.textContent='▶';
+});
+elements.seek.addEventListener('input',e=>{
+  if(state.worldMode){
+    if(state.worldLive)state.worldPinnedHead=state.worldHead;
+    state.worldLive=false;elements.playIcon.textContent='▶';
+    seekWorld(Math.round((state.minTime+Number(e.target.value)/1000*(state.maxTime-state.minTime))*1e6));return;
+  }
+  if(!['recorded','landing-demo'].includes(state.mode))return;state.playing=false;elements.playIcon.textContent='▶';state.simTime=state.minTime+Number(e.target.value)/1000*(state.maxTime-state.minTime);
+});
 q('#camera-yaw').addEventListener('input',e=>{state.azimuth=Number(e.target.value);setText('#yaw-value',state.azimuth+'°');});
 q('#camera-zoom').addEventListener('input',e=>{state.zoom=Number(e.target.value);setText('#zoom-value',number(state.zoom,1)+'×');});
-q('#enable-playcanvas').addEventListener('click',async()=>{
-  const button=q('#enable-playcanvas');button.disabled=true;button.textContent='INITIALIZING 3D ENGINE…';
+async function enableScene(){
+  if(state.pc||state.sceneLoading)return;state.sceneLoading=true;
+  const button=q('#enable-playcanvas');button.disabled=true;button.textContent='LOADING LANDING SCENE…';
   try{
     q('#scene-3d').hidden=false;
-    const pc=await createPlayCanvasScene(q('#scene-3d'),label=>elements.renderer.textContent=label);
-    state.pc=pc;canvas.hidden=true;q('#scene-3d').hidden=false;
-    button.textContent='PLAYCANVAS 3D ENABLED';elements.message.textContent='GEOMETRY PROXY / SPLAT FIELD';
-  }catch(e){q('#scene-3d').hidden=true;button.disabled=false;button.textContent='RETRY PLAYCANVAS 3D ↗';elements.renderer.textContent='LOCAL CANVAS (FALLBACK)';
-    elements.message.textContent='3D UNAVAILABLE: '+e.message;}
-});
+    const renderer=await createPlayCanvasScene(q('#scene-3d'),label=>elements.renderer.textContent=label);
+    for(const history of sceneTimeline.entities.values())for(const sample of history)renderer.ingest(sample);
+    if(state.demoTerrain)renderer.installTerrain(state.demoTerrain);
+    state.pc=renderer;q('#scene-wrap').classList.add('is-4d');canvas.hidden=true;q('#scene-3d').hidden=false;
+    button.textContent='4D SCENE ENABLED';
+  }catch(e){q('#scene-3d').hidden=true;button.disabled=false;button.textContent='RETRY 4D SCENE';elements.renderer.textContent='LOCAL CANVAS';q('#scene-details').textContent='3D UNAVAILABLE: '+e.message;}
+  finally{state.sceneLoading=false;}
+}
+async function loadLandingDemo(){
+  const response=await fetch('/api/scene/demo');if(!response.ok)throw Error('Landing demo unavailable');const demo=await response.json();
+  if(demo.provenance!=='SYNTHETIC_RENDERER_FIXTURE_NOT_NATIVE_SIMULATION')throw Error('Demo provenance mismatch');
+  state.demoTerrain=demo.terrain;for(const sample of demo.frames)sceneTimeline.accept(sample);
+  state.selectedEntity=demo.frames[0].entityId;state.minTime=demo.frames[0].simTime;state.maxTime=demo.frames.at(-1).simTime;state.simTime=0;state.heightReference=0;state.playing=false;
+  q('#scene-title').textContent='SHUTTLEPB / MOON LANDING';
+  q('#timeline-range').textContent=`0 – ${state.maxTime} s · DEMO`;
+  elements.authority.textContent='SYNTHETIC DEMO';elements.authority.className='warning';elements.connection.textContent='LANDING RENDERER DEMO';
+  elements.source.textContent='ACTUAL VESSEL ASSET · SYNTHETIC MOTION';elements.frame.textContent='MOON BODY / METERS';elements.data.textContent='DEMO · NOT SDK ACCEPTANCE';
+  await enableScene();
+}
+q('#enable-playcanvas').addEventListener('click',enableScene);
+q('#camera-elevation').addEventListener('input',e=>{state.cameraElevation=Number(e.target.value);q('#elevation-value').textContent=state.cameraElevation+'°';});
 const clock=()=>{q('#clock-utc').textContent=new Date().toISOString().slice(11,19)+' UTC';};clock();setInterval(clock,1000);
 init();

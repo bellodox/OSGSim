@@ -1,5 +1,7 @@
 # OSG Sim v0.2.1: Windows setup and operation
 
+For the current 0.3.1 matching OSG checkout, required DLL update and added native lifecycle checks, start with [OSG_0.3.1.md](OSG_0.3.1.md). Historical acceptance gates below remain separate.
+
 Run commands in PowerShell from the repository root (the directory containing
 package.json). Replace example installation paths with your real paths.
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-import { assert, finite, vec3, quat } from '../world-protocol/index.mjs';
+import { assert, finite, vec3, quat } from '../world-protocol/primitives.mjs';
 
 export function dot(a,b) { return a.reduce((s,x,i)=>s+x*b[i],0); }
 export function normalizeQ(v) { assert(Array.isArray(v)&&v.length===4,'invalid quaternion dimensions');v.forEach((x,i)=>finite(x,`quaternion ${i}`));const n=Math.hypot(...v); assert(Number.isFinite(n)&&n>1e-14,'zero or invalid quaternion'); return v.map(x=>x/n); }

@@ -1,0 +1,36 @@
+{
+  "file": "OSGSimBridge.dll",
+  "sourceVersion": "OSGSim 0.3.1-dev",
+  "architecture": "Windows x64 (PE32+ AMD64)",
+  "sizeBytes": 279040,
+  "sha256": "c49a222334ca197f07e08b77a39eac9994564ded311e0428e84e5d80cdcfde87",
+  "compiler": "Clang/LLD 19.1.7, x86_64-pc-windows-msvc ABI, /std:c++17 /O2 /MT",
+  "sdkPin": "SpaceXpanse Metaverse v0.1.6a, commit 3264a944196c48a39d14beab7dafdd10c6918461",
+  "dependencies": [
+    "SpaceXpanse.exe",
+    "WS2_32.dll",
+    "KERNEL32.dll"
+  ],
+  "exports": [
+    "InitModule",
+    "ExitModule",
+    "GetModuleVersion",
+    "ModuleDate"
+  ],
+  "metaverseImportsChecked": 22,
+  "missingMetaverseImports": [],
+  "linked": true,
+  "loadTestedInMetaverse": false,
+  "simulationTested": false,
+  "windowsCmakeCtestRun": false,
+  "wireFormat": 2,
+  "bridgeSourceSha256": "51eb99c49d25b00d177d1b7502f29eee669ec00a5af01e0816f645ce8c5bcc78",
+  "wireHeaderSha256": "866809467abadcfc981edf5017174bd8567bed58a74ed6bf101b37875f860356",
+  "sdkHelperSourceSha256": "bb7e21e633b34a9cde5f843466c3c879d404d201b86af618fc692ae2ff3505f7",
+  "sdkHelperObjectSha256": "a02c36b97794ff62a8e9a9e1dd2bf70c4fd4a0fda0dd115d398eda1c318c9c6e",
+  "notes": [
+    "Static Microsoft C/C++ runtime; no MinGW or external VC runtime DLL dependency.",
+    "Native deletion and capture timestamps require this module or a local rebuild of the matching source.",
+    "Portable serializer and PE checks do not establish real Windows load, deletion callbacks, physics or GPU acceptance."
+  ]
+}

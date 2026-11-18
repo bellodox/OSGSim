@@ -1,35 +1,24 @@
 // SPDX-License-Identifier: MIT
 import { createHash } from 'node:crypto';
+import {assert,finite,vec3,quat} from './primitives.mjs';
+export {assert,finite,vec3,quat} from './primitives.mjs';
+import {validateVisual} from '../landing-scene/schema.mjs';
 
 export const PROTOCOL_VERSION = 1;
 export const MAX_ENVELOPE_BYTES = 64 * 1024;
 export const TYPES = Object.freeze([
   'WORLD_INIT', 'WORLD_DELTA', 'OBSERVER_EVIDENCE', 'COMMAND_REQUEST',
   'COMMAND_ACCEPTED', 'CONTACT_BEGIN', 'CONTACT_END', 'CHECKPOINT',
-  'RESYNC_REQUIRED', 'PHYSICS_SAMPLE', 'SIMULATION_RESET', 'HELLO'
+  'RESYNC_REQUIRED', 'ENTITY_REMOVED', 'PHYSICS_SAMPLE', 'SIMULATION_RESET', 'HELLO'
 ]);
 const typeSet = new Set(TYPES);
 const safeId = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/;
 export function sha256(buffer) { return createHash('sha256').update(buffer).digest('hex'); }
-export function assert(condition, message) { if (!condition) throw new Error(message); }
 export function identifier(value, field='id') {
   assert(typeof value === 'string' && safeId.test(value), `invalid ${field}`); return value;
 }
-export function finite(value, field) {
-  assert(typeof value === 'number' && Number.isFinite(value), `invalid ${field}`); return value;
-}
 export function integer(value, field, minimum=0) {
   assert(Number.isSafeInteger(value) && value >= minimum, `invalid ${field}`); return value;
-}
-export function vec3(value, field) {
-  assert(Array.isArray(value) && value.length === 3, `invalid ${field} dimensions`);
-  return Array.from(value,(v,i)=>finite(v,`${field}[${i}]`));
-}
-export function quat(value, field) {
-  assert(Array.isArray(value) && value.length === 4, `invalid ${field} dimensions`);
-  const q = value.map((v,i)=>finite(v,`${field}[${i}]`));
-  const len = Math.hypot(...q); assert(Math.abs(len-1)<1e-3,`invalid ${field} normalization`);
-  return q;
 }
 export function validateEnvelope(input) {
   assert(input && typeof input === 'object' && !Array.isArray(input), 'envelope must be object');
@@ -41,6 +30,11 @@ export function validateEnvelope(input) {
   if ('simTime' in input) finite(input.simTime, 'simTime');
   if ('simDt' in input) { finite(input.simDt, 'simDt'); assert(input.simDt >= 0,'negative simDt'); }
   if ('entityId' in input) identifier(input.entityId,'entityId');
+  if ('entityName' in input) assert(typeof input.entityName==='string'&&input.entityName.length<=512,'invalid entity name');
+  if ('capturedAtUnixMs' in input) integer(input.capturedAtUnixMs,'capturedAtUnixMs');
+  if ('wireFormat' in input) assert([1,2].includes(input.wireFormat),'invalid wire format');
+  if(input.type==='ENTITY_REMOVED'){identifier(input.entityId,'entityId');identifier(input.frameId,'frameId');integer(input.sequence,'sequence',1);finite(input.simTime,'simTime');assert(input.source==='native','removal must identify native source');}
+  if ('visual' in input) validateVisual(input.visual);
   if ('frameId' in input) identifier(input.frameId,'frameId');
   if ('eventId' in input) identifier(input.eventId,'eventId');
   if ('position' in input) vec3(input.position,'position');

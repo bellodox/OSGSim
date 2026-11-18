@@ -1,6 +1,6 @@
 {
   "name": "osg-sim-integration",
-  "version": "0.2.1-dev",
+  "version": "0.4.0-dev",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -16,7 +16,11 @@
     "test:e2e": "node scripts/browser-preflight.mjs",
     "verify": "npm run test && npm run test:integration && npm run test:native && npm run test:e2e",
     "test:wire": "node scripts/test-wire.mjs",
+    "test:world": "node scripts/verify-world.mjs",
     "test:osg": "node scripts/osg-smoke.mjs",
-    "verify:portable": "npm test && npm run test:wire"
+    "verify:portable": "npm test && npm run test:wire",
+    "start:landing": "node apps/world-service/server.mjs --landing-demo",
+    "assets:landing": "node scripts/import-landing-assets.mjs",
+    "test:landing:gpu": "python3 scripts/test_landing_gpu.py"
   }
 }

@@ -24,8 +24,8 @@
     </section>
     <section class="main-grid">
       <div class="scene-panel">
-        <div class="panel-toolbar"><div><span class="tag">01 / SIMULATION VIEW</span><strong id="scene-title">ATLANTIS / EARTH DESCENT</strong></div>
-          <div class="toolbar-right"><span id="renderer-label" class="status-pill">LOCAL CANVAS</span><button type="button" class="text-button" id="enable-playcanvas">ENABLE PLAYCANVAS 3D <span>↗</span></button></div>
+        <div class="panel-toolbar"><div><span class="tag">01 / SIMULATION VIEW</span><strong id="scene-title">SIMULATION / AWAITING SOURCE</strong></div>
+          <small id="scene-details" aria-live="polite">Scene capture required for full rendering</small><div class="toolbar-right"><span id="renderer-label" class="status-pill">LOCAL CANVAS</span><button type="button" class="text-button" id="enable-playcanvas">ENABLE 4D SCENE <span>↗</span></button></div>
         </div>
         <div class="scene-wrap" id="scene-wrap">
           <canvas id="scene-2d" aria-label="Telemetry visualization" width="1060" height="610"></canvas>
@@ -59,6 +59,8 @@
           <input id="camera-yaw" type="range" min="-170" max="170" value="36" step="1"/>
           <div class="field-label"><label for="camera-zoom">VIEW SCALE</label><span id="zoom-value">1.0×</span></div>
           <input id="camera-zoom" type="range" min="0.5" max="2.5" value="1" step="0.05"/>
+          <div class="field-label"><label for="camera-elevation">CAMERA ELEVATION</label><span id="elevation-value">22°</span></div>
+          <input id="camera-elevation" type="range" min="-15" max="85" value="22" step="1"/>
           <div class="observer-nav"><span>INDEPENDENT SESSIONS</span><div>
             <a href="/?observer=A" target="_blank" rel="noopener" id="link-A">A</a>
             <a href="/?observer=B" target="_blank" rel="noopener" id="link-B">B</a>

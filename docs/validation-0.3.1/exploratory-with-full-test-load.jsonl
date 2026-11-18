@@ -1,0 +1,3 @@
+{"peers":0,"activityOperations":0,"vessels":1,"targetStepsPerSecond":50,"sent":247,"accepted":247,"observerCounts":[247,247,247],"latencyP50Ms":173,"latencyP95Ms":283,"maxLatencyMs":313,"httpPolls":0,"reconnected":true,"errors":[]}
+{"peers":32,"activityOperations":96,"vessels":1,"targetStepsPerSecond":50,"sent":246,"accepted":246,"observerCounts":[246,246,246],"latencyP50Ms":229,"latencyP95Ms":349,"maxLatencyMs":448,"httpPolls":0,"reconnected":true,"errors":[]}
+{"peers":32,"activityOperations":96,"vessels":4,"targetStepsPerSecond":50,"sent":956,"accepted":956,"observerCounts":[956,956,956],"latencyP50Ms":30723,"latencyP95Ms":46640,"maxLatencyMs":46845,"httpPolls":450,"reconnected":true,"errors":[]}

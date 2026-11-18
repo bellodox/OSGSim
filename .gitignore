@@ -12,3 +12,4 @@ reports/native-*/
 .osg/cache/
 .osg/logs/
 .osg/export/
+reports/

@@ -174,7 +174,7 @@ export async function createWorldServer({httpPort=4377,bridgePort=4378,dataDir=j
       if(relativePublicPath==='..'||relativePublicPath.startsWith('..'+sep)||isAbsolute(relativePublicPath))
         return json(res,403,{error:'forbidden'});
       const content=await readFile(full);
-      res.writeHead(200,{'content-type':mime[extname(full)]??'application/octet-stream','cache-control':'no-store','content-security-policy':"default-src 'self' https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' ws://127.0.0.1:* https://cdn.jsdelivr.net; img-src 'self' data:;"});res.end(content);
+      res.writeHead(200,{'content-type':mime[extname(full)]??'application/octet-stream','cache-control':'no-store','content-security-policy':"default-src 'self' https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net; worker-src blob:; style-src 'self' 'unsafe-inline'; connect-src 'self' ws://127.0.0.1:* https://cdn.jsdelivr.net; img-src 'self' data:;"});res.end(content);
     }catch(e){json(res,e.code==='ENOENT'?404:500,{error:e.message});}
   });
   httpServer.on('upgrade',(req,socket,head)=>{

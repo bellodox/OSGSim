@@ -2,7 +2,7 @@
 """Real local HTTP/WebSocket browser regression. TCP inputs are synthetic, not SDK proof."""
 import json, os, re, shutil, socket, subprocess, tempfile, time
 from pathlib import Path
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, expect
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -46,36 +46,36 @@ def main():
                 page=browser.new_page(viewport={'width':1450,'height':1024})
                 page.on('pageerror',lambda e:errors.append(str(e)))
                 page.goto(f'http://127.0.0.1:{port}/?observer={ident}')
-                page.wait_for_function("document.querySelector('#authority').textContent.includes('RECORDER')")
+                expect(page.locator('#authority')).to_contain_text('RECORDER')
                 pages.append(page)
             a,b,c=pages
             a.locator('#camera-yaw').fill('101')
             assert b.locator('#camera-yaw').input_value()=='-58'
             a.locator('#timeline').fill('440')
-            a.wait_for_function("document.querySelector('#scene-message').textContent.includes('SOURCE GAP')")
+            expect(a.locator('#scene-message')).to_contain_text('SOURCE GAP')
             assert 'SOURCE GAP' not in b.locator('#scene-message').inner_text()
             a.locator('#timeline').fill('970')
-            a.wait_for_function("document.querySelector('#contact').textContent.includes('RECORDER LANDED')")
+            expect(a.locator('#contact')).to_contain_text('RECORDER LANDED')
             for page in pages:page.close()
             stop(proc);proc=None
             proc,port,bridge=launch(str(Path(directory)/'native'))
             page=browser.new_page()
             page.on('pageerror',lambda e:errors.append(str(e)))
             page.goto(f'http://127.0.0.1:{port}/?observer=A')
-            page.wait_for_function("document.querySelector('#authority').textContent.includes('SDK')")
+            expect(page.locator('#authority')).to_contain_text('SDK')
             client=socket.create_connection(('127.0.0.1',bridge))
             send(client,sample(1),sample(2,contact=True))
-            page.wait_for_function("document.querySelector('#contact').textContent.includes('CONTACT EVENT')")
+            expect(page.locator('#contact')).to_contain_text('CONTACT EVENT')
             send(client,sample(3,entity='vessel-B',x=9000))
             page.wait_for_timeout(100)
             assert 'vessel-A' in page.locator('#source-label').inner_text()
             assert page.locator('#event-count').inner_text()=='01 EVENTS'
             send(client,sample(1,epoch=1,x=8000))
-            page.wait_for_function("document.querySelector('#event-count').textContent==='00 EVENTS'")
-            page.wait_for_function("document.querySelector('#contact').textContent==='NO CONFIRMED EVENT'")
+            expect(page.locator('#event-count')).to_have_text('00 EVENTS')
+            expect(page.locator('#contact')).to_have_text('NO CONFIRMED EVENT')
             assert float(page.locator('#altitude').inner_text())==0
             client.close();client=None
-            page.wait_for_function("document.querySelector('#scene-message').textContent.includes('STALE')",timeout=6000)
+            expect(page.locator('#scene-message')).to_contain_text('STALE',timeout=6000)
             page.close()
             assert not errors,errors
             print('PASS: actual Chromium HTTP/WebSocket; 3 independent recorder observers; native-shaped vessel isolation, contact, epoch reset and disconnected-state indication; no page errors')

@@ -248,8 +248,8 @@ async function refreshStatus(){
 async function init(){
   try{await refreshStatus();
     if(state.mode==='landing-demo'){await loadLandingDemo();requestAnimationFrame(tick);setInterval(refreshStatus,1000);return;}
-    const res=await fetch('/api/recording');
-    if(res.ok){const info=await res.json();state.mode='recorded';state.source='recorded';state.samples=info.samples;
+    const res=state.mode!=='native'?await fetch('/api/recording'):null;
+    if(res?.ok){const info=await res.json();state.mode='recorded';state.source='recorded';state.samples=info.samples;
       state.minTime=state.samples[0].time;state.maxTime=state.samples.at(-1).time;state.simTime=state.minTime;
       state.heightReference=radius(state.samples.at(-1).position);
       state.frame=`${info.metadata.reference} ${info.metadata.frame}`;

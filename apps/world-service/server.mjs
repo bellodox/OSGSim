@@ -342,7 +342,11 @@ export async function createWorldServer({httpPort=4377,bridgePort=4378,dataDir=j
     enqueue(flushWorld).catch(()=>{}).finally(()=>{queued=false;});
   },worldBatchMs);worldTimer.unref();}
   async function close(){closing=true;clearInterval(worldTimer);for(const peer of peers)peer.destroy();for(const s of nativeSockets)s.destroy();
-    await Promise.all([new Promise(r=>httpServer.close(r)),new Promise(r=>tcp.close(r))]);
+    const httpClosed=new Promise(r=>httpServer.close(r));
+    // Closing must also release clients that connected but never completed headers.
+    // Upgraded observers were destroyed above; durable ingress drains below.
+    httpServer.closeAllConnections();
+    await Promise.all([httpClosed,new Promise(r=>tcp.close(r))]);
     await Promise.allSettled([...pumps]);await scheduler.idle();try{if(world&&!world.fault)await flushWorld();}finally{await journal.close();await osg?.close();await world?.close();}}
   return {httpPort:actualHttp,bridgePort:actualBridge,close,state,world,flushWorld:()=>enqueue(flushWorld),handleSample:input=>{const copy=structuredClone(input);return enqueue(()=>acceptSample(copy));},journal,assets};
   }catch(error){clearInterval(worldTimer);await world?.close();if(httpServer?.listening)await new Promise(r=>httpServer.close(r));if(tcp?.listening)await new Promise(r=>tcp.close(r));await osg?.close();await journal.close();throw error;}

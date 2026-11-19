@@ -19,11 +19,13 @@ export async function createPlayCanvasScene(canvas,status){
   const asset=decodeSplats(bytes),timeline=new LandingTimeline(),formatCache=new Map();
   const app=new pc.Application(canvas,{graphicsDeviceOptions:{antialias:false,preserveDrawingBuffer:true}});
   app.setCanvasFillMode(pc.FILLMODE_NONE);app.setCanvasResolution(pc.RESOLUTION_AUTO);
+  app.autoRender=false;
+  app.systems.gsplat.on('frame:request',()=>{app.renderNextFrame=true;});
   app.graphicsDevice.maxPixelRatio=Math.min(devicePixelRatio||1,2);
   const camera=new pc.Entity('Observer Camera');camera.addComponent('camera',{clearColor:new pc.Color(.002,.003,.005),fov:50,nearClip:.1,farClip:50000});app.root.addChild(camera);
-  const models=new Map(),patches=new Map(),pending=new Map();let activePatch=null,terrainCloud=null,disposed=false;
+  const models=new Map(),patches=new Map(),pending=new Map();let activePatch=null,terrainCloud=null,disposed=false,revision=0,lastUpdate=null;
   const stats={ready:true,slicedSegments:0,slicedExhaust:0,renderTime:null,vessels:0,splats:0,terrain:null,error:null,source:null};
-  const resize=new ResizeObserver(()=>app.resizeCanvas());resize.observe(canvas);
+  const resize=new ResizeObserver(()=>{app.resizeCanvas();app.renderNextFrame=true;});resize.observe(canvas);
   const format=()=>{if(!formatCache.has('full'))formatCache.set('full',pc.GSplatFormat.createDefaultFormat(app.graphicsDevice));return formatCache.get('full');};
   function cloud(name,capacity,parent=app.root){
     const resource=new pc.GSplatContainer(app.graphicsDevice,Math.max(1,capacity),format());
@@ -72,22 +74,28 @@ export async function createPlayCanvasScene(canvas,status){
     if(patches.has(hash)||pending.has(hash))return;
     const promise=(async()=>{
       const r=await read('/api/scene/asset/'+hash),data=await r.arrayBuffer();if(data.byteLength>128*1024||await digest(data)!==hash)throw Error('Terrain asset hash mismatch');
-      const t=validateTerrain(JSON.parse(new TextDecoder().decode(data)));if(disposed)return;patches.set(hash,{data:t,...terrainSplats(t)});if(patches.size>8)patches.delete(patches.keys().next().value);
-    })().catch(e=>{stats.assetError=e.message;}).finally(()=>pending.delete(hash));pending.set(hash,promise);
+      const t=validateTerrain(JSON.parse(new TextDecoder().decode(data)));if(disposed)return;patches.set(hash,{data:t,...terrainSplats(t)});revision++;if(patches.size>8)patches.delete(patches.keys().next().value);
+    })().catch(e=>{stats.assetError=e.message;revision++;}).finally(()=>pending.delete(hash));pending.set(hash,promise);
   }
   function ingest(sample){
-    const key=timeline.key;timeline.accept(sample);
+    const key=timeline.key;timeline.accept(sample);revision++;
     if(key!==timeline.key){for(const m of models.values())destroyModel(m);models.clear();activePatch=null;terrainCloud?.destroy();terrainCloud=null;}
     if(sample.visual?.terrainHash)void requestTerrain(sample.visual.terrainHash);
   }
-  function installTerrain(t){const checked=validateTerrain(t);patches.set(checked.id,{data:checked,...terrainSplats(checked)});}
+  function installTerrain(t){const checked=validateTerrain(t);patches.set(checked.id,{data:checked,...terrainSplats(checked)});revision++;}
   function animateWing(m,group,state,sun){
     const left=group===2,index=left?0:1,axis=left?[-.9619,-.2735,0]:[.9619,-.2735,0],hinge=left?[-1.3,-.725,-1.5]:[1.3,-.725,-1.5];
     const angle=((state[index]-.5)*20-(state[2]-.5)*30)*Math.PI/180,a=rotationAxis(axis,angle),render=mm(mm(H,a),H),q=matrixToQuaternion(render),offset=mv(H,sub(hinge,mv(a,hinge)));
     const c=m.groups.get(group);c.entity.setLocalPosition(...offset);c.entity.setLocalRotation(new pc.Quat(...q));c.light(mv(transpose(a),sun));
   }
   function update({simTime=0,azimuth=36,zoom=1,elevation=22,selectedEntity=null,source='unknown'}={}){
-    if(disposed)return;stats.error=stats.assetError??null;stats.renderTime=simTime;stats.source=source;
+    if(disposed)return;
+    // Paused observers still tick, but unchanged physical/camera state must not
+    // rebuild and upload 50,000 splats on every browser animation frame.
+    const updateKey=JSON.stringify([revision,simTime,azimuth,zoom,elevation,selectedEntity,source]);
+    if(updateKey===lastUpdate)return;
+    app.renderNextFrame=true;
+    stats.error=stats.assetError??null;stats.renderTime=simTime;stats.source=source;
     const samples=timeline.at(simTime),selected=samples.find(s=>s.entityId===selectedEntity)??samples[0];
     for(const m of models.values()){m.root.enabled=false;m.shadow.entity.enabled=false;}
     stats.vessels=0;stats.splats=0;stats.terrain=null;if(terrainCloud)terrainCloud.entity.enabled=false;
@@ -124,6 +132,7 @@ export async function createPlayCanvasScene(canvas,status){
     const yaw=azimuth*Math.PI/180,pitch=elevation*Math.PI/180,distance=22/zoom;
     camera.setPosition(...add(cameraOrigin,[Math.sin(yaw)*Math.cos(pitch)*distance,Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance]));camera.lookAt(...add(cameraOrigin,[0,.1,0]));
     canvas.dataset.splats=String(stats.splats);canvas.dataset.sliced=String(stats.slicedSegments);canvas.dataset.renderTime=String(simTime);canvas.dataset.vessels=String(stats.vessels);
+    lastUpdate=updateKey;
   }
   function terrainHit(p,sun,patch){
     const t=patch.data,half=(t.size-1)*t.spacing/2,heights=t.heights;

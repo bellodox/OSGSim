@@ -14,3 +14,5 @@ reports/native-*/
 .osg/export/
 reports/
 tests/_*
+tests/evi*
+.data*

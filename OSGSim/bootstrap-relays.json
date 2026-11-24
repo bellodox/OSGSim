@@ -1,0 +1,5 @@
+{
+  "schema": 1,
+  "relays": [],
+  "note": "No public relays are bundled. SpeXGSP runs its own Nostr relay on every peer. Add relays operated by simulation operators here (wss:// URLs) or pass --relay=<ip|name.rod|wss://host/>."
+}

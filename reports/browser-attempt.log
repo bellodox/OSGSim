@@ -1,6 +1,0 @@
-2026-11-18 — actual local Chromium regression attempt
-Command: python3 scripts/test_browser_live.py
-Result: BLOCKED at browser launch; TargetClosedError.
-Chromium diagnostic: FATAL:chrome/browser/process_singleton_posix.cc:297 Check failed: . socket() failed: Operation not permitted (1)
-No page was loaded. No DOM, HTTP-in-browser, GPU or screenshot verification is claimed for v0.2.1.
-Python runner syntax was checked with py_compile. The native state reducer is covered by Node tests.

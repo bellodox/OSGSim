@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "realmName": "spexgsp/universe/default",
+  "realmId": "moon/default",
+  "gameId": "spexmoon1",
+  "ownerAddress": null,
+  "relayHost": "203.0.113.7:7447",
+  "relays": [],
+  "comment": "Owner only. Copy to OSGSim/realm-authority.json and run Start-SpeXGSP.bat -CreateUniverse. realmName: the ROD name joiners look up (default spexgsp/universe/default; joiners pass -Universe <realmName> otherwise). gameId: 1-40 letters/digits, registered as g/<gameId>. ownerAddress: a legacy address in a loaded wallet, or null for a new address in the SpeXGSP wallet. relayHost: public IP address of the PC that runs the relay, optionally with :port (IP only, no host names; default port 7447); -CreateUniverse generates that relay's TLS certificate and publishes its key hash, joiners trust the relay through ROD. relays: optional extra wss:// relays (up to 6 in total, certificates from a CA). The wallet pays two name registrations."
+}

@@ -1,0 +1,556 @@
+{
+ "schema": 1,
+ "version": "28.0.1",
+ "files": [
+  {
+   "path": "LICENSE",
+   "bytes": 1081,
+   "sha256": "aff8ace570870207c726b21a6c71591c0e94db7c03b4ef2c9484483aa9c7038f"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/fs-util.mjs",
+   "bytes": 2128,
+   "sha256": "3e34bbfc1c7b9266c70fc381c720b4118b560c2a0a5a31b9a68655144db543d4"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/graph-adapter.mjs",
+   "bytes": 8122,
+   "sha256": "5571612ef4c1e06e09ee846f6fb62f062a2789db88a375f9aa82d3e0247f2270"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/hub.mjs",
+   "bytes": 8313,
+   "sha256": "59238e63053ceff77d19112d2a3b2f71ee7a7abf6eb3e350e64efb2e29f3a1fa"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/nostr-mirror.mjs",
+   "bytes": 4465,
+   "sha256": "8dc3c9b70ab108ec3eaa6054fd3a60b5e4f3151f8231faa0d4d1607f3ab48e26"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/ownership.mjs",
+   "bytes": 489,
+   "sha256": "5650c0406035e5d1d9575778f40dd4fd99e256e62e198de056fb339ac1fd8d53"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/peer-wire.mjs",
+   "bytes": 1211,
+   "sha256": "8e97dac50e3fb81315b0d25300d4b50bdf11f481162df021a57db901aa15f069"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/auto-config.mjs",
+   "bytes": 7065,
+   "sha256": "a9cd2534e520b6dfe1008089f0b884dbbecf8fa393619e4adf988383c40f9bc8"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/live-lane.mjs",
+   "bytes": 10405,
+   "sha256": "7b72861b5c995ea20427c6df31f5dc314d3338414e70abc9efb54b82ef10b60a"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/local-endpoint.mjs",
+   "bytes": 862,
+   "sha256": "2fa39857bba7affbe88b44c6ca882bb7fbb13100a5f534437d3cb1f007a1fa93"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/name-origin.mjs",
+   "bytes": 3663,
+   "sha256": "2fbf8e6ef8f01651b67d3942f465e571854b3b9e7e05400d0bfeb360b18c725b"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/native-zmq.py",
+   "bytes": 1766,
+   "sha256": "6011c6cde1ef97fcf8df654d2218e5606d7979b5a3c07ec8d83f092b67cc7d51"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/nostr-bootstrap.mjs",
+   "bytes": 8199,
+   "sha256": "e9363faed5d144902603ee40a94d28fcfce6a0834f5f2c047456f013f38a8f83"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/nostr-history.mjs",
+   "bytes": 14540,
+   "sha256": "3ed1627850d29c8027f3dbd1add48eb5d15fa03a2acbc1fa7987e1c185ec6665"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/nostr-peer.mjs",
+   "bytes": 8882,
+   "sha256": "b7e7861e0de1cde5d89547108e750182a9e8f37141ee7768dd46d0db328b9844"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/player-identity.mjs",
+   "bytes": 10108,
+   "sha256": "f6803de3f9af5891e3a5381c8be5430435f93b69f1e326e3bcd65b1bcb64e6a3"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/protocol.mjs",
+   "bytes": 14419,
+   "sha256": "5b5965da4b56ced6f5c3f0f9fe151bf9f821de43b395574f39b7c0d5919d6636"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/publisher.mjs",
+   "bytes": 19440,
+   "sha256": "532bfe5c22377014afeac3f97cc8a2c092a25317ed9cc1cb15f19c5a07ab1fc4"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/realm-game-index.mjs",
+   "bytes": 2582,
+   "sha256": "362069a0e5a0473425d91bc81f88d1b8df80e95412ff2061f0e6a266600a8aeb"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/rpc-errors.mjs",
+   "bytes": 927,
+   "sha256": "280e702d7641d1aefef3e43fff9612809391a8607bf7b625cebb22299a30b367"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/sync.mjs",
+   "bytes": 17717,
+   "sha256": "78565f907edc926d529ec9f1836bac1c0ed737c41faed1e2ec083e26eca4d84e"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/world-adapter.mjs",
+   "bytes": 9496,
+   "sha256": "4903fd2f2dd762fc75be22f57e5e055dabd1c61295be5f9ac38dd2fd9012a08e"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rod-game/zmq-preflight.mjs",
+   "bytes": 999,
+   "sha256": "23b5ec0ee684950b2a1332c2ab3bbe62f73550cc428764cf39ba60f9456ab017"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/rpc-adapter.mjs",
+   "bytes": 1784,
+   "sha256": "01961458f05faaa6ff0a5fae0a2adfe2f41616f6439071a7f39930a4270c2ac8"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/bootstrap-clock.mjs",
+   "bytes": 1734,
+   "sha256": "42b33e00d980a774e9a5f7e404815f6ef0c77269a6575a286edae06447976559"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/crypto.mjs",
+   "bytes": 5603,
+   "sha256": "f449fc95ec6314d259e366864ac4f1360e68e09c4e2f84de03fdd43506fce8f7"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/local-runtime.mjs",
+   "bytes": 16165,
+   "sha256": "2d14a9991a357dca252cc80025726a0b6058147ccf2bc70591714adb7f6c961a"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/network-policy.mjs",
+   "bytes": 1751,
+   "sha256": "4d4de998f815d3bc3fe11c84472af3aed9b6304e3e4fbe150ade989d4aed7909"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/operator-relay.mjs",
+   "bytes": 13118,
+   "sha256": "94653280cde176104228551fdae2878c262c58d94f69c6673cadbd4f501e6093"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/pinned-websocket.mjs",
+   "bytes": 5946,
+   "sha256": "93be1f36b8c1dd12da9f250f11b4596294b258fc1391ff0d3ba2c6007e8aeab3"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/realm-init.mjs",
+   "bytes": 1065,
+   "sha256": "1f23be1d86e48c0da177c863ab64b849b6ef289c7b88873ef04c266ad89199e7"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/relay-cert.mjs",
+   "bytes": 7235,
+   "sha256": "c986fc5256dff4269db737ff5b7135109da62831c35682e09f5c668fbfaeaa68"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/relay-client.mjs",
+   "bytes": 7872,
+   "sha256": "591f99af6fb7f1a494d57682ba8a1aed4b89f6067f25c56d8da6c732883b1587"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/relay-pool.mjs",
+   "bytes": 5003,
+   "sha256": "7693447c457a35f2a3623c9373fcc60bc0c4ba6655e12be57e5d08688426aa26"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/resolver.mjs",
+   "bytes": 5635,
+   "sha256": "8a2c9b58942bd6f9b386ee7464593763cbe54905a4daf50ffc314640c3f47c5c"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/single-address/universe-catalog.mjs",
+   "bytes": 2993,
+   "sha256": "c51f27bbbb3df9fd2035ef1ba52cb3424087ad71a371b323870aa00fd7931fe8"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/spawn-ports.mjs",
+   "bytes": 6193,
+   "sha256": "39c217f347461982056c238b1d662ecb798bc99607fc9ff9fb248727e0157e6c"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/world-manifest.mjs",
+   "bytes": 3812,
+   "sha256": "914fd73742e2f996d4b4fd42fe078e1054c0993db38a040defbd7f83920eb4a1"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/world-time.mjs",
+   "bytes": 7008,
+   "sha256": "f6bd48d293a803fa67f038d6964faeaf7d8a59587f93142bae33b334a0b05038"
+  },
+  {
+   "path": "OSGSim/apps/metaverse-native/v26/world.mjs",
+   "bytes": 11640,
+   "sha256": "209e46e14b8855fc4e59523de21dccb2b613043d2857cc67fae158df5a618934"
+  },
+  {
+   "path": "OSGSim/bootstrap-relays.json",
+   "bytes": 231,
+   "sha256": "6251a53fd80f828942036db7e638e178124c320402a1cbf6e66a97dc5534b680"
+  },
+  {
+   "path": "OSGSim/realm-authority.example.json",
+   "bytes": 942,
+   "sha256": "c9e2f8376becd8cb8aff17c31f90ab971fa15c0686ffa957324d61fce17e4820"
+  },
+  {
+   "path": "OSGSim/rod-rpc-url.txt",
+   "bytes": 50,
+   "sha256": "03be76b0528cfd5758f34b04f08cec4a5b698af814d45ff54e224309a1d69fe6"
+  },
+  {
+   "path": "OSGSim/scripts/Capture-SpeXGSP-v26-DX9.ps1",
+   "bytes": 2359,
+   "sha256": "d7a023e620cb22a322dd27bdd0340af3998c57947de234c5b8625190e0892234"
+  },
+  {
+   "path": "OSGSim/scripts/spexgsp-create-universe.mjs",
+   "bytes": 13715,
+   "sha256": "76aaaa3b180229c61d6d22bd4935580f249be07dc1fdf8d1f5105b1ce631de9c"
+  },
+  {
+   "path": "OSGSim/scripts/spexgsp-rod-peer.mjs",
+   "bytes": 18025,
+   "sha256": "03a253c89039e966361484e6767171b548e61de0a81c903ae70be558a9209732"
+  },
+  {
+   "path": "OSGSim/scripts/spexgsp-rod-player.mjs",
+   "bytes": 9635,
+   "sha256": "2ec82b6f592edbef27e9a626b057015ad7d4462d0dc0de957828e3f14e42b298"
+  },
+  {
+   "path": "README.md",
+   "bytes": 25701,
+   "sha256": "2ae4e2a9c70ccc7b8ce0407816218d769d9fbea096b4b19ab4d04e92d3bc2ebf"
+  },
+  {
+   "path": "Start-SpeXGSP.ps1",
+   "bytes": 3701,
+   "sha256": "eb54da9826509e48db38e0fbfd53a8b27a6a9093443ce6dedca0e0315ff07cfd"
+  },
+  {
+   "path": "dependencies/OmniSpatialGraph-multi-Audit-Fixes.zip",
+   "bytes": 25813,
+   "sha256": "9ce413dbad538775c1d212707f93d147fa4d68c5e99a94e55dad5cb907816c05"
+  },
+  {
+   "path": "fixtures/Brighton.cfg",
+   "bytes": 451,
+   "sha256": "e27f793f49b103f64dc83ceffd409cc00303482f94dec513198507535033b19e"
+  },
+  {
+   "path": "fixtures/extrapolate-golden.json",
+   "bytes": 106296,
+   "sha256": "8b29996bbc186435cb762d015591097499c4681b0543648e1be2a1e4cb363a20"
+  },
+  {
+   "path": "native/spexgsp-rod/CMakeLists.txt",
+   "bytes": 995,
+   "sha256": "a1dc3360a4c81116bab210987db13b204dcabca084ba7e8d44b47a6308d09739"
+  },
+  {
+   "path": "native/spexgsp-rod/HubClient.hpp",
+   "bytes": 30107,
+   "sha256": "96f531ed7dfa0579aaa898d7f08494d58c1b7ee1dedaf59f19779197a7c4f215"
+  },
+  {
+   "path": "native/spexgsp-rod/Json.hpp",
+   "bytes": 7883,
+   "sha256": "cd9d90e5d5b7175e82232244dfb7edaf35d4910e7d9b2a2e65d8702062c254cd"
+  },
+  {
+   "path": "native/spexgsp-rod/Png.hpp",
+   "bytes": 9524,
+   "sha256": "3279fdff228bcb31dd77004394d342da95e7093c4bf221d7cd416d50db8bf82b"
+  },
+  {
+   "path": "native/spexgsp-rod/Sha256.hpp",
+   "bytes": 2996,
+   "sha256": "5e0c60b1cd75832ad8558820d522ba7251a9a5da10136d6125924ca5437424d2"
+  },
+  {
+   "path": "native/spexgsp-rod/SpeXGSP.cpp",
+   "bytes": 24152,
+   "sha256": "7ab5deef210edcc040b0c9533a619795d64ba00332624bbb957ed0455c150e2c"
+  },
+  {
+   "path": "native/spexgsp-rod/V26Wire.hpp",
+   "bytes": 6320,
+   "sha256": "1bfe32b94da7e9e47abb5d7d01f49148ed99500cb1d3d7805b07ab837850e89d"
+  },
+  {
+   "path": "native/spexgsp-rod/WinPlatform.hpp",
+   "bytes": 12421,
+   "sha256": "9321513f66ce94b262c4e6bfa69a59815245606fb682c5a6ac25ec7ff944ac79"
+  },
+  {
+   "path": "native/spexgsp-rod/WorldClock.hpp",
+   "bytes": 7629,
+   "sha256": "ad43d1d11b96a9cba9eaa52770147104f9592e3bd1f3c7df42a7015bac767e91"
+  },
+  {
+   "path": "scripts/Ensure-OsgMulti-Local.ps1",
+   "bytes": 4035,
+   "sha256": "c4dc6cc1fb2f86080b0478b9546587f3ec1ea1cf3cb8cee54c79aa13ff0fa049"
+  },
+  {
+   "path": "scripts/make-manifest.mjs",
+   "bytes": 2171,
+   "sha256": "adca077e535d866daa1c704700c355d553a0e4ea38844618cea441aac73381f9"
+  },
+  {
+   "path": "scripts/preflight.mjs",
+   "bytes": 3046,
+   "sha256": "9119b258c141a609d438d935c0336a950488435bc50790476028eb6d52e5bee1"
+  },
+  {
+   "path": "scripts/start-rod-core.mjs",
+   "bytes": 10527,
+   "sha256": "a52d5119f982047ee4c2f43cc6b295c52bf782b3b6a28d1d24e2bf0c60353bb9"
+  },
+  {
+   "path": "scripts/verify-release.mjs",
+   "bytes": 1744,
+   "sha256": "967d242656a3815d754b1eaeff18fc243d8d5289a3a40e6a1058c853df9ddd26"
+  },
+  {
+   "path": "tests/active-entrypoint-syntax.test.mjs",
+   "bytes": 1009,
+   "sha256": "35e3e4206e93ba0635baf50b0c8f2356d1b6b912e24c0f9092ebfbbd2b70e9d6"
+  },
+  {
+   "path": "tests/fs-util-bootstrap.test.mjs",
+   "bytes": 2832,
+   "sha256": "bc6b81c7f93f09e561883502dda12066c1a9f31a1e9d34f7ca4acf3f746f2acb"
+  },
+  {
+   "path": "tests/graph-adapter.test.mjs",
+   "bytes": 2506,
+   "sha256": "c696cb5219ced857f8bdc287225e3cb3cfbd9f8e17c3303106af137cebf6a171"
+  },
+  {
+   "path": "tests/hardening.test.mjs",
+   "bytes": 8147,
+   "sha256": "e3553368f9768986dc29ed728e7afdd78ec48a0baf3c3c1655feaf68e8188a33"
+  },
+  {
+   "path": "tests/live-modules.test.mjs",
+   "bytes": 10251,
+   "sha256": "ce010030a99c5c1c3c9954c39e4e46f844d842c50773decbd10aac7000c12135"
+  },
+  {
+   "path": "tests/mainnet-fixture.mjs",
+   "bytes": 312,
+   "sha256": "d1ac41ae420fb8cf61a1af9f66d2c6e7445a61f38c928fd57634916169335701"
+  },
+  {
+   "path": "tests/native-extrapolate-cli.cpp",
+   "bytes": 557,
+   "sha256": "a861aaab01dfde4b6df787a26af5c25f00d91ded36933f1101aadf76a8fb4dc3"
+  },
+  {
+   "path": "tests/native-extrapolate-handoff.test.mjs",
+   "bytes": 1939,
+   "sha256": "b23e530a2223f1dbff03a02a0f6629f341ce2c6fa4e804153842934fab60dc45"
+  },
+  {
+   "path": "tests/native-hub-cli.cpp",
+   "bytes": 5399,
+   "sha256": "6af801c01222d29fdb2c26bcd487d3669bb4cd16b7fcff97d0c43df0af11945d"
+  },
+  {
+   "path": "tests/native-hub-client.test.mjs",
+   "bytes": 26142,
+   "sha256": "1fd5b7a953ea7d027ca4208e7f4b8e915c5954ab66e88cd5547cca7a23398bad"
+  },
+  {
+   "path": "tests/native-json-cli.cpp",
+   "bytes": 1625,
+   "sha256": "abb72cc7606d6d7eeaf259e145493b94eb5abbaa5f4d6dbadfdb71b4ffd15d3b"
+  },
+  {
+   "path": "tests/native-rod-wire.cpp",
+   "bytes": 4471,
+   "sha256": "7eab22686b41610055e377ca0387d533668e8028f0b31a981e75359c5495a817"
+  },
+  {
+   "path": "tests/native-winplatform-test.cpp",
+   "bytes": 6103,
+   "sha256": "c45b9e825e8fc1117a80475aacd11d43e80b73f376b0d5722a6a35b33b23fe7c"
+  },
+  {
+   "path": "tests/operator-relay.test.mjs",
+   "bytes": 10903,
+   "sha256": "206bb2c82a72add0ea0152ab1912708dd3c1b6dd8c6ac232ade0174d732d31cc"
+  },
+  {
+   "path": "tests/preflight.test.mjs",
+   "bytes": 4509,
+   "sha256": "f2655c31cd4c497c07529ce0e29aa4d83b749e834286309ca2adeae7dc6a4206"
+  },
+  {
+   "path": "tests/realm-startup.test.mjs",
+   "bytes": 9245,
+   "sha256": "d153e66da0e03b0bf033508b2aca41e6e705df1ff79b9d4fc7e13f1691ca8879"
+  },
+  {
+   "path": "tests/relay-tls.test.mjs",
+   "bytes": 14564,
+   "sha256": "66f255b760896dfd5e04917890f8bbf1c9af466e869f1f7dc0722051840ae27a"
+  },
+  {
+   "path": "tests/repaired-auth-endpoint.test.mjs",
+   "bytes": 2494,
+   "sha256": "e9aa4d02fe2e47172bb1a8a847620dabeec4cf2116e7552f90a24a6e7fbc250d"
+  },
+  {
+   "path": "tests/rod-auto-config.test.mjs",
+   "bytes": 8679,
+   "sha256": "87ee868c8c50614f172e9b9a590e36d88718b2f114b4f92a83c1a156d015f227"
+  },
+  {
+   "path": "tests/rod-name-origin.test.mjs",
+   "bytes": 3067,
+   "sha256": "51a0f5af04be2d1b3f971992edd8012a8c9edfe9d0cf4a5c8feed0fccdd75d5b"
+  },
+  {
+   "path": "tests/rod-nostr-bootstrap.test.mjs",
+   "bytes": 5087,
+   "sha256": "71832acb3a6339d4bd1bded8dd625f0d2d433bdeca46d9c01526689f0f23a3c6"
+  },
+  {
+   "path": "tests/rod-nostr-dual-transport.test.mjs",
+   "bytes": 3582,
+   "sha256": "d675cf259c128d4dc5a61ba53149933ebf067b68fded52d22fb624466757b242"
+  },
+  {
+   "path": "tests/rod-nostr-history-repair.test.mjs",
+   "bytes": 8136,
+   "sha256": "d8f9475528abfe3b1c684849aff3e9df7bbedb1045dcd69f7f2b8628701fc2fe"
+  },
+  {
+   "path": "tests/rod-nostr-peer.test.mjs",
+   "bytes": 5000,
+   "sha256": "8a850e6ca1fc8655d4e4ba4d3fd9b2b9461f4baabfa2c4717053452800748af9"
+  },
+  {
+   "path": "tests/rod-player-identity.test.mjs",
+   "bytes": 4679,
+   "sha256": "e4c11cdc16f6bbc66ced1c60136075187d572237f9d011e1f47e62d3256615b6"
+  },
+  {
+   "path": "tests/rod-primary-distributed.test.mjs",
+   "bytes": 26451,
+   "sha256": "61c17acd47d38ccd3c883ae7d003aa614c9cbf68b4f4942dd31d2dfc1d5abcb2"
+  },
+  {
+   "path": "tests/rod-realm-game-index.test.mjs",
+   "bytes": 3478,
+   "sha256": "a17d6986eccf281ca3f6e3678f3c49fd4049ff29cb42465bc9b987872e0e63f3"
+  },
+  {
+   "path": "tests/rod-trackedgames.test.mjs",
+   "bytes": 2026,
+   "sha256": "86c1e9083214101d2ddf5fa65084bd860fd27b78844f161de4dc5eddda7a858c"
+  },
+  {
+   "path": "tests/rod-zmq-endpoints.test.mjs",
+   "bytes": 1346,
+   "sha256": "36755ac8631882bef8633d29831aefb3188dcd73458685e5268c7e523a1051c0"
+  },
+  {
+   "path": "tests/rod-zmq-framing.test.mjs",
+   "bytes": 2330,
+   "sha256": "86dd77214984c481fb6ef1784294243178ca0eb00e6ddcc83ded54c1b09ea6ac"
+  },
+  {
+   "path": "tests/rod-zmq-publisher-fixture.py",
+   "bytes": 539,
+   "sha256": "b3d62b78d53cb14bbe80a2b97c59aea97bf2f6e86b0bf4743aa32eb5bfabd53a"
+  },
+  {
+   "path": "tests/start-rod-core.test.mjs",
+   "bytes": 21635,
+   "sha256": "06c000acd05a3e9ec0a3fc44464a8e52849a7617dbf10c36e172b7a3807fcdad"
+  },
+  {
+   "path": "tests/support/nip01-loopback.mjs",
+   "bytes": 4673,
+   "sha256": "38bc68a4a1820b6aaa0edb1662fb0dbf23afa729d9ee48940ecd76e406970047"
+  },
+  {
+   "path": "tests/support/nostr-test-helpers.mjs",
+   "bytes": 766,
+   "sha256": "6c9238b74a084349f412a7ab9107f5e96b55b0178d8d0539f1598cf88db7fb37"
+  },
+  {
+   "path": "tests/support/rod-fixture.mjs",
+   "bytes": 4392,
+   "sha256": "98d695a77407f00c526d8d3fd27f6ca3cb520d9731270ec6ac77644275a2249a"
+  },
+  {
+   "path": "tests/support/test-world.mjs",
+   "bytes": 2668,
+   "sha256": "59ca08b105267c11188e6397f44cb75791240be112c62113f08d0e4d072c25c1"
+  },
+  {
+   "path": "tests/unified-launch.test.mjs",
+   "bytes": 3845,
+   "sha256": "71b8f7e568482217ca66da989ff5fe6c66a977de98c1f8a1e31ae56bbff7d259"
+  },
+  {
+   "path": "tests/v26.test.mjs",
+   "bytes": 7104,
+   "sha256": "1d0742630c8210ab06491f0f9aac9b3a0022bd57185aaf03e811679327b64d05"
+  },
+  {
+   "path": "tests/v263-regressions.test.mjs",
+   "bytes": 6610,
+   "sha256": "d66376d638be215dc9d17f786c310929c2a6db250c04650c3d7bccac1c220acc"
+  },
+  {
+   "path": "tests/v2687-e2e.test.mjs",
+   "bytes": 8820,
+   "sha256": "5b739629da0a16479a770432e0f8ad96ebd6de823980f06ee4403f6eff67b601"
+  },
+  {
+   "path": "tests/v2687-live-lane.test.mjs",
+   "bytes": 19177,
+   "sha256": "2e7fb6588ba5d1d753c8e6fed5270f37db7a51824df83df4fc7d83da9b2284ae"
+  },
+  {
+   "path": "tests/v2687-phase1.test.mjs",
+   "bytes": 9104,
+   "sha256": "34385d47cce5a148440c30eea21942943b6042ec286c2607f86d763e0144b70b"
+  },
+  {
+   "path": "tests/v2688-fixes.test.mjs",
+   "bytes": 9256,
+   "sha256": "5c10e401d66e76b6a5bb633717f47dab62227f98a79510757d5308cc1c4ddc0c"
+  },
+  {
+   "path": "tests/v2688-round2.test.mjs",
+   "bytes": 26706,
+   "sha256": "46974645baec1351c0a2ce6fed80575a609e4b997ea939dff0d8ab4d4de56d98"
+  }
+ ]
+}
